@@ -13,6 +13,7 @@ Usage instructions
 * You will need to initialize the class using something similar to this:
 	
 	<pre>
+	<?php
 	$config = array(
 		'slug' => plugin_basename(__FILE__), // this is the slug of your plugin
 		'proper_folder_name' => 'plugin-name', // this is the name of the folder your plugin lives in
