@@ -9,7 +9,7 @@ The code is still in it's infancy, but [I am currently using it](https://github.
 Usage instructions
 ===========
 
-* The class should be included somewhere in your plugin. You will need to require the file (example: `include_once('updater.php`);`). 
+* The class should be included somewhere in your plugin. You will need to require the file (example: `include_once('updater.php');`). 
 * You will need to initialize the class using something similar to this:
 	
 	<pre>
@@ -27,7 +27,11 @@ Usage instructions
 	new wp_github_updater($config);
 	</pre>	
 	
-* In your Github repository, you will need to include the following line (formatted exactly like this) anywhere in your Readme file: `~Current Version:1.0~`, you will need to update the version number anytime you update the plugin, this will ultimately let the plugin know that a new version is available.
+* In your Github repository, you will need to include the following line (formatted exactly like this) anywhere in your Readme file: 
+
+	`~Current Version:1.0~`
+
+* You will need to update the version number anytime you update the plugin, this will ultimately let the plugin know that a new version is available.
 
 * **Note**: this class will unfortunately not work with a private repository, your repository needs to be publicly accessible. If anyone knows how to make this work for private repositories, please get in touch!
 
