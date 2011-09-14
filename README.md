@@ -12,6 +12,7 @@ Usage instructions
 * The class should be included somewhere in your plugin. You will need to require the file (example: `include_once('updater.php`);`). 
 * You will need to initialize the class using something similar to this:
 	
+	<pre>
 	$config = array(
 		'slug' => plugin_basename(__FILE__), // this is the slug of your plugin
 		'proper_folder_name' => 'plugin-name', // this is the name of the folder your plugin lives in
@@ -23,6 +24,7 @@ Usage instructions
 		'tested' => '3.3', // which version of WordPress is your plugin tested up to?
 	);
 	new wp_github_updater($config);
+	</pre>	
 	
 * In your Github repository, you will need to include the following line (formatted exactly like this) anywhere in your Readme file: `~Current Version:1.0~`, you will need to update the version number anytime you update the plugin, this will ultimately let the plugin know that a new version is available.
 
