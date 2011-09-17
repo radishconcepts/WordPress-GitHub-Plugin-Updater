@@ -25,7 +25,7 @@
 	* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	*/
 
-if (!class_exists('github_updater')) :
+if (!class_exists('wp_github_updater')) :
 
 class wp_github_updater {
 	
