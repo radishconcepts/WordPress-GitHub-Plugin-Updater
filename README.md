@@ -29,7 +29,7 @@ Usage instructions
 	
 * In your Github repository, you will need to include the following line (formatted exactly like this) anywhere in your Readme file: 
 
-	`~Current Version:1.0~`
+	`~Current Version:1.0.1~`
 
 * You will need to update the version number anytime you update the plugin, this will ultimately let the plugin know that a new version is available.
 
@@ -38,6 +38,9 @@ Usage instructions
 
 Changelog
 ===========
+
+### 1.0.1
+* Fixed potential fatal error with wp_error
 
 ### 1.0
 * Initial Public Release
@@ -56,7 +59,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program; if not, write to:
 
-Free Software Foundation, Inc.  
-51 Franklin Street, Fifth Floor,   
-Boston, MA  
+Free Software Foundation, Inc.
+51 Franklin Street, Fifth Floor,
+Boston, MA
 02110-1301, USA.
