@@ -84,7 +84,12 @@ class wp_github_updater {
 	function get_new_version() {
 		$version = get_site_transient($this->config['slug'].'_new_version');
 		if (!isset($version) || !$version || $version == '') {
+			
 			$raw_response = wp_remote_get($this->config['raw_url'].'/README.md');
+			
+			if (is_wp_error($raw_response)) 
+				return false;
+			
 			$__version = explode('~Current Version:', $raw_response['body']);
 			$_version = explode('~', $__version[1]);
 			$version = $_version[0];
