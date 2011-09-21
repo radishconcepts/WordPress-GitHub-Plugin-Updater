@@ -1,7 +1,7 @@
 <?php
 
 /**
-	* @version 1.0.1
+	* @version 1.0.2
 	* @author Joachim Kudish <info@jkudish.com>
 	* @link http://jkudish.com
 	* @license http://www.gnu.org/copyleft/gpl.html GNU Public License
@@ -65,12 +65,16 @@ class wp_github_updater {
 		
 		// Hook into the plugin details screen
 		add_filter('plugins_api', array(&$this, 'get_plugin_info'), 10, 3);
-		
-
 		add_filter('upgrader_post_install', array(&$this, 'upgrader_post_install'), 10, 3);
+		
+		// set timeout
+		add_filter('http_request_timeout', array(&$this, 'http_request_timeout'));
 		
 	}
 
+	function http_request_timeout() {
+		return 2;
+	}
 
 
 	// For testing purpose, the site transient will be reset on each page load
@@ -84,12 +88,12 @@ class wp_github_updater {
 	function get_new_version() {
 		$version = get_site_transient($this->config['slug'].'_new_version');
 		if (!isset($version) || !$version || $version == '') {
-			
+
 			$raw_response = wp_remote_get($this->config['raw_url'].'/README.md');
-			
-			if (is_wp_error($raw_response)) 
+
+			if (is_wp_error($raw_response))
 				return false;
-			
+				
 			$__version = explode('~Current Version:', $raw_response['body']);
 			$_version = explode('~', $__version[1]);
 			$version = $_version[0];
@@ -102,9 +106,12 @@ class wp_github_updater {
 		$github_data = get_site_transient($this->config['slug'].'_github_data');
 		if (!isset($github_data) || !$github_data || $github_data == '') {		
 			$github_data = wp_remote_get($this->config['api_url']);
-			if (!is_wp_error($github_data)) {
-				$github_data = json_decode($github_data['body']);
-			}	
+			
+			if (is_wp_error($github_data))
+				return false;
+			
+			$github_data = json_decode($github_data['body']);
+			
 			set_site_transient($this->config['slug'].'_github_data', $github_data, 60*60*60*6); // refresh every 6 hours
 		}
 		return $github_data;			
