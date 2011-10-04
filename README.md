@@ -37,6 +37,16 @@ Usage instructions
 
 * **Note**: this class will unfortunately not work with a private repository, your repository needs to be publicly accessible. If anyone knows how to make this work for private repositories, please get in touch!
 
+FAQ
+===========
+
+Q: I am getting the following error:
+	<pre>
+	Download failed. SSL certificate problem, verify that the CA cert is OK. Details: error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed
+	</pre>
+
+A: See the discussion and answer here: https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2
+
 
 Changelog
 ===========
