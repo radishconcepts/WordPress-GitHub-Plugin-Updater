@@ -1,7 +1,7 @@
 <?php
 
 /**
-	* @version 1.0.2
+	* @version 1.0.3
 	* @author Joachim Kudish <info@jkudish.com>
 	* @link http://jkudish.com
 	* @license http://www.gnu.org/copyleft/gpl.html GNU Public License
