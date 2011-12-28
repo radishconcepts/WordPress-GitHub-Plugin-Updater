@@ -41,8 +41,8 @@ class wp_github_updater {
 			'github_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater',
 			'zip_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/zipball/master',
 			'sslverify' => true,
-		    'requires' => $wp_version,
-	        'tested' => $wp_version,
+		    	'requires' => $wp_version,
+	        	'tested' => $wp_version,
 		);	
 	
 		$this->config = wp_parse_args($config, $defaults);	
