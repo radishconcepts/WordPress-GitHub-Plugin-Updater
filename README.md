@@ -31,7 +31,7 @@ Usage instructions
 	
 * In your Github repository, you will need to include the following line (formatted exactly like this) anywhere in your Readme file: 
 
-	`~Current Version:1.0.2~`
+	`~Current Version:1.0.3~`
 
 * You will need to update the version number anytime you update the plugin, this will ultimately let the plugin know that a new version is available.
 
@@ -45,15 +45,16 @@ Q: I am getting the following error:
 	Download failed. SSL certificate problem, verify that the CA cert is OK. Details: error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed
 	</pre>
 
-A: See the discussion and answer here: https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2
-UPDATE: this is now fixed in the class thanks to @pmichael https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4
+A: See the discussion and answer [here](https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2)
+
+**UPDATE**: this is now fixed in the class thanks to [@pmichael](https://github.com/pmichael), [details here](https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4)
 
 
 Changelog
 ===========
 
 ### 1.0.3
-* Fixed sslverify issue, props @pmichael
+* Fixed sslverify issue, props [@pmichael](https://github.com/pmichael)
 
 
 ### 1.0.2
