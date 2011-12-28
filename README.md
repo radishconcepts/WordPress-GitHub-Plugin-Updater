@@ -46,10 +46,15 @@ Q: I am getting the following error:
 	</pre>
 
 A: See the discussion and answer here: https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2
+UPDATE: this is now fixed in the class thanks to @pmichael https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4
 
 
 Changelog
 ===========
+
+### 1.0.3
+* Fixed sslverify issue, props @pmichael
+
 
 ### 1.0.2
 * Fixed potential timeout
