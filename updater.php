@@ -40,8 +40,9 @@ class wp_github_updater {
 			'raw_url' => 'https://raw.github.com/jkudish/WordPress-GitHub-Plugin-Updater/master',
 			'github_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater',
 			'zip_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/zipball/master',
-		  'requires' => $wp_version,
-	    'tested' => $wp_version,
+			'sslverify' => true,
+		    'requires' => $wp_version,
+	        'tested' => $wp_version,
 		);	
 	
 		$this->config = wp_parse_args($config, $defaults);	
@@ -89,7 +90,7 @@ class wp_github_updater {
 		$version = get_site_transient($this->config['slug'].'_new_version');
 		if (!isset($version) || !$version || $version == '') {
 
-			$raw_response = wp_remote_get($this->config['raw_url'].'/README.md');
+			$raw_response = wp_remote_get($this->config['raw_url'].'/README.md', $this->config['sslverify']);
 
 			if (is_wp_error($raw_response))
 				return false;
@@ -105,7 +106,7 @@ class wp_github_updater {
 	function get_github_data() {
 		$github_data = get_site_transient($this->config['slug'].'_github_data');
 		if (!isset($github_data) || !$github_data || $github_data == '') {		
-			$github_data = wp_remote_get($this->config['api_url']);
+			$github_data = wp_remote_get($this->config['api_url'], $this->config['sslverify']);
 			
 			if (is_wp_error($github_data))
 				return false;
