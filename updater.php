@@ -25,13 +25,18 @@
 	* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	*/
 	
-/**
-*  @updated author Venturit Inc - Narada Jayasingha 
+/*
+Plugin Name: GitHub Updater
+Description: Custom post type for image galleries.
+Version: 1.1.5
+Original Author Joachim Kudish, http://jkudish.com
+Author: Venturit Inc - Narada Jayasingha
+License: GPLv2 or later
 */
 
-if (!class_exists('GithubUpdater')) :
+if (!class_exists('GitHubUpdater')) :
 
-	class GithubUpdater {
+	class GitHubUpdater {
 	
 		function __construct(){
 
@@ -208,7 +213,7 @@ if (!class_exists('GithubUpdater')) :
 	
 	}
 		
-new GithubUpdater;
+new GitHubUpdater;
 
 
 endif; // endif class exists
