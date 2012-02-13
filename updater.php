@@ -33,10 +33,7 @@ Original Author Joachim Kudish, http://jkudish.com
 Author: Venturit Inc - Narada Jayasingha
 License: GPLv2 or later
 */
-
-if (!class_exists('GitHubUpdater')) :
-
-	class GitHubUpdater {
+class GitHubUpdater {
 	
 		function __construct(){
 
@@ -102,7 +99,7 @@ if (!class_exists('GitHubUpdater')) :
 		function get_new_version() {
 			
 			$version = get_site_transient($this->config['slug'].'_new_version');
-
+			
 			if (!isset($version) || !$version || $version == '') {
 				$raw_response = wp_remote_get($this->config['raw_url'].'/README.md', $this->config['sslverify']);
 				if (is_wp_error($raw_response))
@@ -211,9 +208,7 @@ if (!class_exists('GitHubUpdater')) :
 			return $result;
 		}
 	
-	}
+}
 		
 new GitHubUpdater;
 
-
-endif; // endif class exists
