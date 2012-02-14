@@ -28,7 +28,7 @@
 /*
 Plugin Name: GitHub Updater
 Description: Update plugin using git hub.
-Version: 1.3.0
+Version: 1.3.1
 Original Author Joachim Kudish, http://jkudish.com
 Author: Venturit Inc - Narada Jayasingha
 License: GPLv2 or later
@@ -67,7 +67,7 @@ class GitHubUpdater {
 			if (!isset($this->config['author'])) $this->config['author'] = $plugin_data['Author'];
 			if (!isset($this->config['homepage'])) $this->config['homepage'] = $plugin_data['PluginURI'];
 			
-			add_action( 'init', array(&$this, 'delete_transients') );
+			add_action( 'init', array(&$this, 'reset_transients') );
 			if (!defined('WP_MEMORY_LIMIT')) define('WP_MEMORY_LIMIT', '96M');
 	
 			add_filter('pre_set_site_transient_update_plugins', array(&$this, 'api_check'));
@@ -88,10 +88,9 @@ class GitHubUpdater {
 		}
 	
 		//the site transient will be reset on each page load
-		function delete_transients() {		
-			// delete_site_transient('update_plugins');
-			 delete_site_transient($this->config['slug'].'_github_data');
-			 delete_site_transient($this->config['slug'].'_new_version');
+		function reset_transients() {		
+		  $up = get_transient('update_plugins');
+		  set_transient('update_plugins', $up);
 		}
 	
 		function get_new_version() {
