@@ -28,7 +28,7 @@
 /*
 Plugin Name: GitHub Updater
 Description: Update plugin using git hub.
-Version: 1.3.1
+Version: 1.3.2
 Original Author Joachim Kudish, http://jkudish.com
 Author: Venturit Inc - Narada Jayasingha
 License: GPLv2 or later
@@ -89,8 +89,9 @@ class GitHubUpdater {
 	
 		//the site transient will be reset on each page load
 		function reset_transients() {		
-		  $up = get_transient('update_plugins');
-		  set_transient('update_plugins', $up);
+			delete_site_transient('update_plugins');
+		 // $up = get_transient('update_plugins');
+		 // set_transient('update_plugins', $up);
 		}
 	
 		function get_new_version() {
