@@ -88,8 +88,8 @@ class GitHubUpdater {
 		}
 	
 		//the site transient will be reset on each page load
-		function delete_transients() {			
-		//	 delete_site_transient('update_plugins');
+		function delete_transients() {		
+			// delete_site_transient('update_plugins');
 			 delete_site_transient($this->config['slug'].'_github_data');
 			 delete_site_transient($this->config['slug'].'_new_version');
 		}
