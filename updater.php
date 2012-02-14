@@ -28,7 +28,7 @@
 /*
 Plugin Name: GitHub Updater
 Description: Update plugin using git hub.
-Version: 1.3.9
+Version: 1.4.0
 Original Author Joachim Kudish, http://jkudish.com
 Author: Venturit Inc - Narada Jayasingha
 License: GPLv2 or later
@@ -71,12 +71,15 @@ class GitHubUpdater {
 			//register_activation_hook( plugin_basename(__FILE__), array(&$this, 'delete_transients'));
 			if (!defined('WP_MEMORY_LIMIT')) define('WP_MEMORY_LIMIT', '96M');
 	
-			add_filter('pre_set_site_transient_update_plugins', array(&$this, 'api_check'),10,1);
-	
+			add_filter('site_transient_update_plugins', array(&$this, 'api_check'),10,1);
+			add_filter('transient_update_plugins', array(&$this, 'api_check'),10,1);
+			
 			// Hook into the plugin details screen
 			add_filter('plugins_api', array(&$this, 'get_plugin_info'), 10, 3);
 			add_filter('upgrader_post_install', array(&$this, 'upgrader_post_install'), 10, 3);
-	
+			
+			add_action( 'admin_init', array(&$this, 'api_check') );
+			
 			// set timeout
 			add_filter('http_request_timeout', array(&$this, 'http_request_timeout'));
 		}
@@ -84,11 +87,6 @@ class GitHubUpdater {
 	
 		function http_request_timeout() {
 			return 2;
-		}
-	
-		//reset the transients at the plugin activation
-		function delete_transients() {		
-			delete_site_transient('update_plugins');
 		}
 	
 		function get_new_version() {
