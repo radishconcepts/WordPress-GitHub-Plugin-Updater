@@ -28,7 +28,7 @@
 /*
 Plugin Name: GitHub Updater
 Description: Update plugin using git hub.
-Version: 1.4.4
+Version: 1.4.5
 Original Author Joachim Kudish, http://jkudish.com
 Author: Venturit Inc - Narada Jayasingha
 License: GPLv2 or later
@@ -78,7 +78,7 @@ class GitHubUpdater {
 			add_filter('plugins_api', array(&$this, 'get_plugin_info'), 10, 3);
 			add_filter('upgrader_post_install', array(&$this, 'upgrader_post_install'), 10, 3);
 			
-			add_action( 'admin_init', array(&$this, 'api_check') );
+			//add_action( 'admin_init', array(&$this, 'api_check') );
 			
 			// set timeout
 			add_filter('http_request_timeout', array(&$this, 'http_request_timeout'));
