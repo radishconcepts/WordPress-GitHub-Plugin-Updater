@@ -28,7 +28,7 @@
 /*
 Plugin Name: GitHub Updater
 Description: Update plugin using git hub.
-Version: 1.3.8
+Version: 1.3.9
 Original Author Joachim Kudish, http://jkudish.com
 Author: Venturit Inc - Narada Jayasingha
 License: GPLv2 or later
@@ -68,10 +68,10 @@ class GitHubUpdater {
 			if (!isset($this->config['homepage'])) $this->config['homepage'] = $plugin_data['PluginURI'];
 			
 			
-			register_activation_hook( plugin_basename(__FILE__), array(&$this, 'delete_transients'));
+			//register_activation_hook( plugin_basename(__FILE__), array(&$this, 'delete_transients'));
 			if (!defined('WP_MEMORY_LIMIT')) define('WP_MEMORY_LIMIT', '96M');
 	
-			add_filter('pre_set_site_transient_update_plugins', array(&$this, 'api_check'));
+			add_filter('pre_set_site_transient_update_plugins', array(&$this, 'api_check'),10,1);
 	
 			// Hook into the plugin details screen
 			add_filter('plugins_api', array(&$this, 'get_plugin_info'), 10, 3);
@@ -80,9 +80,7 @@ class GitHubUpdater {
 			// set timeout
 			add_filter('http_request_timeout', array(&$this, 'http_request_timeout'));
 		}
-		function check_plugin_updates() {
-			echo '<div class="updated"><p><a href="/wp-admin/plugins.php?#'.$this->config['plugin_name'].'">There is a new version of '.$this->config['plugin_name'].' available.<a/></p></div>';
-		}
+
 	
 		function http_request_timeout() {
 			return 2;
@@ -163,6 +161,10 @@ class GitHubUpdater {
 			add_action('admin_notices', array(&$this, 'check_plugin_updates'));
 			}			
 			return $transient;
+		}
+		
+		function check_plugin_updates() {
+			echo '<div class="updated"><p><a href="/wp-admin/plugins.php?#'.$this->config['plugin_name'].'">There is a new version of '.$this->config['plugin_name'].' available.<a/></p></div>';
 		}
 	
 		function get_plugin_info( $false, $action, $args ) {
