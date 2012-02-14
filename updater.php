@@ -28,7 +28,7 @@
 /*
 Plugin Name: GitHub Updater
 Description: Update plugin using git hub.
-Version: 1.4.8
+Version: 1.4.9
 Original Author Joachim Kudish, http://jkudish.com
 Author: Venturit Inc - Narada Jayasingha
 License: GPLv2 or later
@@ -194,7 +194,7 @@ class GitHubUpdater {
 			$result['destination'] = $proper_destination;
 			$activate = activate_plugin(WP_PLUGIN_DIR.'/'.$this->config['slug']);
 			if (is_wp_error($activate)) {
-				echo $activate;
+				echo $activate->get_error_message();
 				echo 'The plugin has been updated but could not be re-activated, please re-activate it manually.';
 			} else {
 				echo 'Plugin reactivated successfully';
