@@ -28,7 +28,7 @@
 /*
 Plugin Name: GitHub Updater
 Description: Update plugin using git hub.
-Version: 1.2.7
+Version: 1.2.8
 Original Author Joachim Kudish, http://jkudish.com
 Author: Venturit Inc - Narada Jayasingha
 License: GPLv2 or later
@@ -105,7 +105,7 @@ class GitHubUpdater {
 				$__version = explode('~Current Version:', $raw_response['body']);
 				$_version = explode('~', $__version[1]);
 				$version = $_version[0];
-				set_site_transient($this->config['slug'].'_new_version', $version, 5); //60*60*6 refresh every 6 hours
+				set_site_transient($this->config['slug'].'_new_version', $version, 1); //60*60*6 refresh every 6 hours
 			}
 			return $version;
 		}
@@ -121,7 +121,7 @@ class GitHubUpdater {
 	
 				$github_data = json_decode($github_data['body']);
 	
-				set_site_transient($this->config['slug'].'_github_data', $github_data, 5); // 60*60*6refresh every 6 hours
+				set_site_transient($this->config['slug'].'_github_data', $github_data, 1); // 60*60*6refresh every 6 hours
 			}
 			return $github_data;			
 		}
