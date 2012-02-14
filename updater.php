@@ -28,7 +28,7 @@
 /*
 Plugin Name: GitHub Updater
 Description: Custom post type for image galleries.
-Version: 1.1.9
+Version: 1.2.0
 Original Author Joachim Kudish, http://jkudish.com
 Author: Venturit Inc - Narada Jayasingha
 License: GPLv2 or later
@@ -67,7 +67,8 @@ class GitHubUpdater {
 			if (!isset($this->config['author'])) $this->config['author'] = $plugin_data['Author'];
 			if (!isset($this->config['homepage'])) $this->config['homepage'] = $plugin_data['PluginURI'];
 			
-			if (WP_DEBUG) add_action( 'init', array(&$this, 'delete_transients') );
+			//if (WP_DEBUG) add_action( 'init', array(&$this, 'delete_transients') );
+			add_action( 'init', array(&$this, 'delete_transients') );
 			if (!defined('WP_MEMORY_LIMIT')) define('WP_MEMORY_LIMIT', '96M');
 	
 			add_filter('pre_set_site_transient_update_plugins', array(&$this, 'api_check'));
@@ -91,15 +92,15 @@ class GitHubUpdater {
 		function delete_transients() {
 			
 			delete_site_transient('update_plugins');
-			delete_site_transient($this->config['slug'].'_new_version');
-			delete_site_transient($this->config['slug'].'_github_data');
-			delete_site_transient($this->config['slug'].'_changelog');
+			// delete_site_transient($this->config['slug'].'_new_version');
+			// delete_site_transient($this->config['slug'].'_github_data');
+			// delete_site_transient($this->config['slug'].'_changelog');
 		}
 	
 		function get_new_version() {
 			
-			$version = get_site_transient($this->config['slug'].'_new_version');
-			
+			//$version = get_site_transient($this->config['slug'].'_new_version');
+			$version='';
 			if (!isset($version) || !$version || $version == '') {
 				$raw_response = wp_remote_get($this->config['raw_url'].'/README.md', $this->config['sslverify']);
 				if (is_wp_error($raw_response))
@@ -108,15 +109,15 @@ class GitHubUpdater {
 				$__version = explode('~Current Version:', $raw_response['body']);
 				$_version = explode('~', $__version[1]);
 				$version = $_version[0];
-				set_site_transient($this->config['slug'].'_new_version', $version, 5); //60*60*6 refresh every 6 hours
+				//set_site_transient($this->config['slug'].'_new_version', $version, 5); //60*60*6 refresh every 6 hours
 			}
 			return $version;
 		}
 	
 		function get_github_data() {
 			
-			$github_data = get_site_transient($this->config['slug'].'_github_data');
-
+			//$github_data = get_site_transient($this->config['slug'].'_github_data');
+			$github_data='';
 			if (!isset($github_data) || !$github_data || $github_data == '') {		
 				$github_data = wp_remote_get($this->config['api_url'], $this->config['sslverify']);
 	
@@ -125,7 +126,7 @@ class GitHubUpdater {
 	
 				$github_data = json_decode($github_data['body']);
 	
-				set_site_transient($this->config['slug'].'_github_data', $github_data, 5); // 60*60*6refresh every 6 hours
+				//set_site_transient($this->config['slug'].'_github_data', $github_data, 5); // 60*60*6refresh every 6 hours
 			}
 			return $github_data;			
 		}
@@ -212,3 +213,4 @@ class GitHubUpdater {
 		
 new GitHubUpdater;
 
+?>
