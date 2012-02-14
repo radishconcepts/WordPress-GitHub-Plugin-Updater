@@ -28,7 +28,7 @@
 /*
 Plugin Name: GitHub Updater
 Description: Update plugin using git hub.
-Version: 1.4.6
+Version: 1.4.7
 Original Author Joachim Kudish, http://jkudish.com
 Author: Venturit Inc - Narada Jayasingha
 License: GPLv2 or later
@@ -77,9 +77,7 @@ class GitHubUpdater {
 			// Hook into the plugin details screen
 			add_filter('plugins_api', array(&$this, 'get_plugin_info'), 10, 3);
 			add_filter('upgrader_post_install', array(&$this, 'upgrader_post_install'), 10, 3);
-			
-			//add_action( 'admin_init', array(&$this, 'api_check') );
-			
+				
 			// set timeout
 			add_filter('http_request_timeout', array(&$this, 'http_request_timeout'));
 		}
@@ -100,7 +98,7 @@ class GitHubUpdater {
 				$__version = explode('~Current Version:', $raw_response['body']);
 				$_version = explode('~', $__version[1]);
 				$version = $_version[0];
-				set_site_transient($this->config['slug'].'_new_version', $version, 1); //60*60*6 refresh every 6 hours
+				set_site_transient($this->config['slug'].'_new_version', $version, 1); //60*60*6 refresh every 6 hours, set 1 for testing
 			}
 			return $version;
 		}
@@ -116,7 +114,7 @@ class GitHubUpdater {
 	
 				$github_data = json_decode($github_data['body']);
 	
-				set_site_transient($this->config['slug'].'_github_data', $github_data, 1); // 60*60*6refresh every 6 hours
+				set_site_transient($this->config['slug'].'_github_data', $github_data, 1); // 60*60*6refresh every 6 hours, set 1 for testing
 			}
 			return $github_data;			
 		}
