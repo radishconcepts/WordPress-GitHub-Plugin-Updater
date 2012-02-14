@@ -28,7 +28,7 @@
 /*
 Plugin Name: GitHub Updater
 Description: Custom post type for image galleries.
-Version: 1.2.2
+Version: 1.2.3
 Original Author Joachim Kudish, http://jkudish.com
 Author: Venturit Inc - Narada Jayasingha
 License: GPLv2 or later

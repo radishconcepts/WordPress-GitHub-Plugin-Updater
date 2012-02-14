@@ -1,2 +1,2 @@
 This plugin test updating plugin through github 
-`~Current Version:1.2.2~`
+`~Current Version:1.2.3~`
