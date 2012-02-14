@@ -1,2 +1,2 @@
-WordPress Github Plugin Updater
-`~Current Version:1.3.7~`
+This plugin tests updating plugin through github 
+`~Current Version:1.3.6~`
