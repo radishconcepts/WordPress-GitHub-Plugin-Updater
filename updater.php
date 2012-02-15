@@ -194,12 +194,12 @@ class GitHubUpdater {
 			$result['destination'] = $proper_destination;
 			echo $result['destination']."\r";
 			$activate = activate_plugin(WP_PLUGIN_DIR.'/'.$this->config['slug']);
-			if (is_wp_error($activate)) {
-				echo $activate->get_error_message();
-				echo 'The plugin has been updated but could not be re-activated, please re-activate it manually.';
-			} else {
-				echo 'Plugin reactivated successfully';
-			}	
+			// if (is_wp_error($activate)) {
+			// 	echo $activate->get_error_message();
+			// 	echo 'The plugin has been updated but could not be re-activated, please re-activate it manually.';
+			// } else {
+			// 	echo 'Plugin reactivated successfully';
+			// }	
 			return $result;
 		}
 	
