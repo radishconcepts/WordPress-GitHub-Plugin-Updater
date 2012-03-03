@@ -40,6 +40,13 @@ if ( ! class_exists( 'wp_github_updater' ) ) :
  */
 class wp_github_updater {
 	/**
+	 * i18n Text Domain
+	 * @var string 
+	 */
+	const LANG = 'kudish_updater';
+
+
+	/**
 	 * Construct
 	 * @since 
 	 * 
@@ -321,8 +328,14 @@ class wp_github_updater {
 		$activate = activate_plugin( WP_PLUGIN_DIR."/{$this->config['slug']}" );
 
 		// Output the update message
-		$fail		= __( 'The plugin has been updated but could not be re-activated, please re-activate it manually.' );
-		$success	= __( 'Plugin reactivated successfully' );
+		$fail		= __( 
+			 'The plugin has been updated, but could not be reactivated. Please reactivate it manually.'
+			,self :: LANG 
+		);
+		$success	= __( 
+			 'Plugin reactivated successfully.'
+			,self :: LANG 
+		);
 		echo is_wp_error( $activate ) ? $fail : $success;
 
 		return $result;
