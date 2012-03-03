@@ -15,7 +15,7 @@ if ( ! class_exists('WP') )
 if ( ! class_exists( 'wp_github_updater' ) ) :
 
 /**
- * @version 1.0.3
+ * @version 1.1
  * @author Joachim Kudish <info@jkudish.com>
  * @link http://jkudish.com
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
