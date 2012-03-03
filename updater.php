@@ -30,45 +30,58 @@ Plugin Name: GitHub Updater
 Description: Update plugin using git hub.
 Version: 1.5.6
 Original Author Joachim Kudish, http://jkudish.com
-Author: Venturit Inc - Narada Jayasingha
+Author: Venturit Inc 
 License: GPLv2 or later
 */
+	
 class GitHubUpdater {
 	
-		function __construct(){
+		// Initialize the setup of the updater.
+		function __construct($config = array()){
 
 			global $wp_version;	
-			$config = array(
+			
+			// Setup the defaults, change these values in the plugin that you want to update.
+			$defaults = array(
 				'slug' => plugin_basename(__FILE__),
-				'proper_folder_name' => plugin_basename(__FILE__),
+				'proper_folder_name' => "WordPress-GitHub-Plugin-Updater",
 				'api_url' => 'https://api.github.com/repos/prabode/WordPress-GitHub-Plugin-Updater',
-				'raw_url' => 'https://raw.github.com/prabode/WordPress-GitHub-Plugin-Updater/master',
-				'github_url' => 'https://github.com/prabode/WordPress-GitHub-Plugin-Updater',
-				'zip_url' => 'https://github.com/prabode/WordPress-GitHub-Plugin-Updater/zipball/master',
-				'sslverify' => true,
-				'requires' => $wp_version,
-				'tested' => $wp_version,
+				'raw_url' => 'https://api.github.com/repos/prabode/WordPress-GitHub-Plugin-Updater/master',
+				'github_url' => 'https://api.github.com/repos/prabode/WordPress-GitHub-Plugin-Updater',
+				'zip_url' => 'https://api.github.com/repos/prabode/WordPress-GitHub-Plugin-Updater/zipball/master',
+				'sslverify' => false,
+				'requires' => "3.1.0",
+				'tested' => "3.3.1", //$wp_version
 				);	
+				
+			// Get the config values from the actual plugin we will be updating.
+			$this->config = wp_parse_args($config, $defaults);
 	
-			$this->config = $config;
-	
+			// Get the new version number by checking github
 			if (!isset($this->config['new_version'])) $this->config['new_version'] = $this->get_new_version();
+			// Ge the updated date from github
 			if (!isset($this->config['last_updated'])) $this->config['last_updated'] = $this->get_date();
+			// Get the Github description, the part at the top of the github page, not the readme.
 			if (!isset($this->config['description'])) $this->config['description'] = $this->get_description();
 	
+			
 			$plugin_data = $this->get_plugin_data();
 			
 			if (!isset($this->config['plugin_name'])) $this->config['plugin_name'] = $plugin_data['Name'];		
-				$my_readme_file = file_get_contents(plugin_dir_path( __FILE__ ).'README.md');
-				$__version = explode('~Current Version:', $my_readme_file);
-				$_version = explode('~', $__version[1]);
-				$my_plugin_version = $_version[0];
+			
+			// Get the current version number of the install plugin, not the github version.			
+			$my_readme_file = file_get_contents(plugin_dir_path( __FILE__ ).'README.md');
+			$__version = explode('~Current Version:', $my_readme_file);
+			$_version = explode('~', $__version[1]);
+			$my_plugin_version = $_version[0];
+
+			// Set the current version of the plugin
 			if (!isset($this->config['version'])) $this->config['version'] = $my_plugin_version;
 			if (!isset($this->config['author'])) $this->config['author'] = $plugin_data['Author'];
 			if (!isset($this->config['homepage'])) $this->config['homepage'] = $plugin_data['PluginURI'];
 			
 			
-			//register_activation_hook( plugin_basename(__FILE__), array(&$this, 'delete_transients'));
+			if (WP_DEBUG) add_action( 'init', array(&$this, 'delete_transients') );
 			if (!defined('WP_MEMORY_LIMIT')) define('WP_MEMORY_LIMIT', '96M');
 	
 			add_filter('site_transient_update_plugins', array(&$this, 'api_check'),10,1);
@@ -86,19 +99,31 @@ class GitHubUpdater {
 		function http_request_timeout() {
 			return 2;
 		}
+		
+		// For testing purpose, the site transient will be reset on each page load
+		function delete_transients() {
+			//delete_site_transient('update_plugins');
+			delete_site_transient($this->config['slug'].'_new_version');
+			delete_site_transient($this->config['slug'].'_github_data');
+			delete_site_transient($this->config['slug'].'_changelog');
+		}		
+		
 	
 		function get_new_version() {
 			
 			$version = get_site_transient($this->config['slug'].'_new_version');
+			// Check if site_transient _new_version is set
 			if (!isset($version) || !$version || $version == '') {
-				$raw_response = wp_remote_get($this->config['raw_url'].'/README.md', $this->config['sslverify']);
+
+				// Get the readme file on github
+				$raw_response = wp_remote_get($this->config['raw_url'].'/README.md', array('sslverify'=>false));
 				if (is_wp_error($raw_response))
 					return false;
 	
 				$__version = explode('~Current Version:', $raw_response['body']);
 				$_version = explode('~', $__version[1]);
 				$version = $_version[0];
-				set_site_transient($this->config['slug'].'_new_version', $version, 1); //60*60*6 refresh every 6 hours, set 1 for testing
+				set_site_transient($this->config['slug'].'_new_version', $version, 60*60*6); //60*60*6 refresh every 6 hours, set 1 for testing
 			}
 			return $version;
 		}
@@ -107,14 +132,14 @@ class GitHubUpdater {
 			
 			$github_data = get_site_transient($this->config['slug'].'_github_data');
 			if (!isset($github_data) || !$github_data || $github_data == '') {		
-				$github_data = wp_remote_get($this->config['api_url'], $this->config['sslverify']);
+				$github_data = wp_remote_get($this->config['api_url'], array('sslverify'=>false));
 	
 				if (is_wp_error($github_data))
 					return false;
 	
 				$github_data = json_decode($github_data['body']);
 	
-				set_site_transient($this->config['slug'].'_github_data', $github_data, 1); // 60*60*6refresh every 6 hours, set 1 for testing
+				set_site_transient($this->config['slug'].'_github_data', $github_data, 60*60*6); // 60*60*6refresh every 6 hours, set 1 for testing
 			}
 			return $github_data;			
 		}
@@ -126,11 +151,13 @@ class GitHubUpdater {
 			return $date;
 		}
 	
+		// Get the description of the plugin from github
 		function get_description() {
 			$_description = $this->get_github_data();
 			return $_description->description;
 		}
 	
+		// Get the plugin data from the header of the actual local plugin file.
 		function get_plugin_data() {
 			include_once(ABSPATH.'/wp-admin/includes/plugin.php');
 			$data = get_plugin_data(WP_PLUGIN_DIR.'/'.$this->config['slug']);
@@ -159,12 +186,12 @@ class GitHubUpdater {
 			return $transient;
 		}
 		
+		// Display the alert message in the admin.
 		function check_plugin_updates() {
-			echo '<div class="updated"><p><a href="/wp-admin/plugins.php?#'.$this->config['plugin_name'].'">There is a new version of '.$this->config['plugin_name'].' available.<a/></p></div>';
+			echo '<div class="updated"><p><a href="/wp-admin/plugins.php?#'.$this->config['plugin_name'].'">There is a new version of '.$this->config['plugin_name'].' available.</a></p></div>';
 		}
 	
 		function get_plugin_info( $false, $action, $args ) {
-
 			$plugin_slug = plugin_basename( __FILE__ );
 			// Check if this plugins API is about this plugin
 			if( $args->slug != $this->config['slug'] ) return false;
@@ -187,12 +214,26 @@ class GitHubUpdater {
 		}
 	
 		function upgrader_post_install($true, $hook_extra, $result) {
+			global $wp_filesystem;
+			// Rewrite the folder from the github slug to a shorter, prettier, folder name.
+			$proper_destination = WP_PLUGIN_DIR.'/'.$this->config['proper_folder_name'];
+			$wp_filesystem->move($result['destination'], $proper_destination);
+			$result['destination'] = $proper_destination;
 			$activate = activate_plugin(WP_PLUGIN_DIR.'/'.$this->config['slug']);
+			if (is_wp_error($activate)) {
+				echo 'The plugin has been updated but could not be re-activated, please re-activate it manually.';
+			} else {
+				echo 'Plugin reactivated successfully';
+			}	
 			return $result;
 		}
+		
+		
+		
+		
+		
 	
 }
-		
-new GitHubUpdater;
+
 
 ?>
