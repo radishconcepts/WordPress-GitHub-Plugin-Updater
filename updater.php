@@ -276,11 +276,11 @@ class wp_github_updater {
 	 * Get Plugin info
 	 * @since 
 	 * 
-	 * @param boolean $false
+	 * @param unknown_type $false
 	 * @param unknown_type $action
-	 * @param unknown_type $result
+	 * @param unknown_type $args
 	 * 
-	 * @return unknown_type $args
+	 * @return unknown_type $response
 	 */
 	public function get_plugin_info( $false, $action, $args ) {
 		$plugin_slug = plugin_basename( __FILE__ );
