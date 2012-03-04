@@ -168,7 +168,7 @@ class wp_github_updater {
 			$_version	= explode( '~', $__version[1] );
 			$version	= $_version[0];
 			// refresh every 6 hours
-			set_site_transient( "{$this->config['slug']}_new_version", $version, 60*60*60*6 );
+			set_site_transient( "{$this->config['slug']}_new_version", $version, 60*60*6 );
 		}
 
 		return $version;
@@ -185,7 +185,7 @@ class wp_github_updater {
 	public function get_github_data() {
 		$github_data = get_site_transient( "{$this->config['slug']}_github_data" );
 
-		if ( ! isset($github_data) || ! $github_data || '' == $github_data ) {		
+		if ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) {		
 			$github_data = wp_remote_get( $this->config['api_url'], $this->config['sslverify'] );
 
 			if ( is_wp_error( $github_data ) )
@@ -193,7 +193,7 @@ class wp_github_updater {
 
 			$github_data = json_decode( $github_data['body'] );
 			// refresh every 6 hours
-			set_site_transient( "{$this->config['slug']}_github_data", $github_data, 60*60*60*6);
+			set_site_transient( "{$this->config['slug']}_github_data", $github_data, 60*60*6);
 		}
 
 		return $github_data;			
