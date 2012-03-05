@@ -159,7 +159,10 @@ class wp_github_updater {
 		$version = get_site_transient( "{$this->config['slug']}_new_version" );
 
 		if ( ! isset( $version ) || ! $version || '' == $version ) {
-			$raw_response = wp_remote_get( "{$this->config['raw_url']}/README.md", $this->config['sslverify'] );
+			$raw_response = wp_remote_get( 
+				 "{$this->config['raw_url']}/README.md"
+				,$this->config['sslverify'] 
+			);
 
 			if ( is_wp_error( $raw_response ) )
 				return false;
@@ -186,7 +189,10 @@ class wp_github_updater {
 		$github_data = get_site_transient( "{$this->config['slug']}_github_data" );
 
 		if ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) {		
-			$github_data = wp_remote_get( $this->config['api_url'], $this->config['sslverify'] );
+			$github_data = wp_remote_get( 
+				 $this->config['api_url']
+				,$this->config['sslverify'] 
+			);
 
 			if ( is_wp_error( $github_data ) )
 				return false;
