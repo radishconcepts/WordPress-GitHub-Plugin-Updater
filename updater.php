@@ -57,17 +57,20 @@ class wp_github_updater {
 	public function __construct( $config = array() ) {
 		global $wp_version;
 
-		$g = 'github.com';
+		$host	= 'github.com';
+		$http	= 'https://';
+		$name	= 'jkudish';
+		$repo	= 'WordPress-GitHub-Plugin-Updater';
 		$defaults = array(
-			'slug'					=> plugin_basename( __FILE__ ),
-			'proper_folder_name'	=> plugin_basename( __FILE__ ),
-			'api_url'				=> "https://api.{$g}/repos/jkudish/WordPress-GitHub-Plugin-Updater",
-			'raw_url'				=> "https://raw.{$g}/jkudish/WordPress-GitHub-Plugin-Updater/master",
-			'github_url'			=> "https://{$g}/jkudish/WordPress-GitHub-Plugin-Updater",
-			'zip_url'				=> "https://{$g}/jkudish/WordPress-GitHub-Plugin-Updater/zipball/master",
-			'sslverify'				=> true,
-	    	'requires'				=> $wp_version,
-        	'tested'				=> $wp_version,
+			'slug'				=> plugin_basename( __FILE__ ),
+			'proper_folder_name'=> plugin_basename( __FILE__ ),
+			'api_url'			=> "{$http}api.{$host}/repos/{$name}/{$repo}",
+			'raw_url'			=> "{$http}raw.{$host}/{$name}/{$repo}/master",
+			'github_url'		=> "{$http}{$host}/{$name}/{$repo}",
+			'zip_url'			=> "{$http}{$host}/{$name}/{$repo}/zipball/master",
+			'sslverify'			=> true,
+	    	'requires'			=> $wp_version,
+        	'tested'			=> $wp_version,
 		);	
 
 		$this->config = wp_parse_args( $config, $defaults );
