@@ -54,8 +54,8 @@ Changelog
 ===========
 
 ### 1.2
-* Added phpDoc and minor syntax/readability adjusments, props @franz-josef-kaiser, @GaryJones
-* Added a die to prevent direct access, props @franz-josef-kaiser
+* Added phpDoc and minor syntax/readability adjusments, props [@franz-josef-kaiser](https://github.com/franz-josef-kaiser), [@GaryJones](https://github.com/GaryJones)
+* Added a die to prevent direct access, props [@franz-josef-kaiser](https://github.com/franz-josef-kaiser)
 
 ### 1.0.3
 * Fixed sslverify issue, props @pmichael
