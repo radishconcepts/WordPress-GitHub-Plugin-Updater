@@ -219,7 +219,7 @@ class WPGitHubUpdater {
 	/**
 	 * Get Plugin data
 	 *
-	 * @since 1.0.
+	 * @since 1.0
 	 * @return object $data the data
 	 */
 	public function get_plugin_data() {
