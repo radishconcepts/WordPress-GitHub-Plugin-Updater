@@ -58,7 +58,7 @@ Changelog
 * Added a die to prevent direct access, props [@franz-josef-kaiser](https://github.com/franz-josef-kaiser)
 
 ### 1.0.3
-* Fixed sslverify issue, props @pmichael
+* Fixed sslverify issue, props [@pmichael](https://github.com/pmichael)
 
 ### 1.0.2
 * Fixed potential timeout
