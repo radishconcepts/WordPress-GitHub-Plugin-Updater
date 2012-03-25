@@ -31,7 +31,7 @@ Usage instructions
 
 * In your Github repository, you will need to include the following line (formatted exactly like this) anywhere in your Readme file:
 
-	`~Current Version:1.0.3~`
+	`~Current Version:1.2~`
 
 * You will need to update the version number anytime you update the plugin, this will ultimately let the plugin know that a new version is available.
 
@@ -53,9 +53,12 @@ A: See the discussion and answer [here](https://github.com/jkudish/WordPress-Git
 Changelog
 ===========
 
-### 1.0.3
-* Fixed sslverify issue, props [@pmichael](https://github.com/pmichael)
+### 1.2
+* Added phpDoc and minor syntax/readability adjusments, props @franz-josef-kaiser, @GaryJones
+* Added a die to prevent direct access, props @franz-josef-kaiser
 
+### 1.0.3
+* Fixed sslverify issue, props @pmichael
 
 ### 1.0.2
 * Fixed potential timeout
