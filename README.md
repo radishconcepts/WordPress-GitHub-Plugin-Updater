@@ -1,17 +1,17 @@
 WordPress Github Plugin Updater
 
-This class is meant to be used with your Github hosted WordPress plugins. The purpose of the class is to allow your WordPress plugin to be updated whenever you push out a new version of your plugin; similarly to the experience users know and love with the WordPress.org plugin repository. 
+This class is meant to be used with your Github hosted WordPress plugins. The purpose of the class is to allow your WordPress plugin to be updated whenever you push out a new version of your plugin; similarly to the experience users know and love with the WordPress.org plugin repository.
 
-Not all plugins can or should be hosted on the WordPress.org plugin repository, or you may chose to host it on github only. 
+Not all plugins can or should be hosted on the WordPress.org plugin repository, or you may chose to host it on github only.
 
 The code is still in it's infancy, but [I am currently using it](https://github.com/jkudish/JigoShop-Software-Add-on) on a production plugin and production website, without any glitches. That being said, please consider this as a beta release. The project started off as a private client request, but is now public for anyone to collaborate on. I am open to any suggestions :)
 
 Usage instructions
 ===========
 
-* The class should be included somewhere in your plugin. You will need to require the file (example: `include_once('updater.php');`). 
+* The class should be included somewhere in your plugin. You will need to require the file (example: `include_once('updater.php');`).
 * You will need to initialize the class using something similar to this:
-	
+
 	<pre>
 	if (is_admin()) { // note the use of is_admin() to double check that this is happening in the admin
 		$config = array(
@@ -27,9 +27,9 @@ Usage instructions
 		);
 		new wp_github_updater($config);
 	}
-	</pre>	
-	
-* In your Github repository, you will need to include the following line (formatted exactly like this) anywhere in your Readme file: 
+	</pre>
+
+* In your Github repository, you will need to include the following line (formatted exactly like this) anywhere in your Readme file:
 
 	`~Current Version:1.0.3~`
 
