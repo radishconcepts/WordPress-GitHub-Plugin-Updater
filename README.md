@@ -18,7 +18,7 @@ Usage instructions
 			'slug' => plugin_basename(__FILE__), // this is the slug of your plugin
 			'proper_folder_name' => 'plugin-name', // this is the name of the folder your plugin lives in
 			'api_url' => 'https://api.github.com/repos/jkudish/WordPress-GitHub-Plugin-Updater', // the github API url of your github repo
-			'raw_url' => 'https://raw.github.com/jkudish/WordPress-GitHub-Plugin-Updater', // the github raw url of your github repo
+			'raw_url' => 'https://raw.github.com/jkudish/master/WordPress-GitHub-Plugin-Updater', // the github raw url of your github repo
 			'github_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater', // the github url of your github repo
 			'zip_url' => 'https://github.com/jkudish/JigoShop-Software-Add-on/zipball/master', // the zip url of the github repo
 			'sslverify' => true // wether WP should check the validity of the SSL cert when getting an update, see https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2 and https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4 for details
@@ -31,7 +31,7 @@ Usage instructions
 
 * In your Github repository, you will need to include the following line (formatted exactly like this) anywhere in your Readme file:
 
-	`~Current Version:1.2~`
+	`~Current Version:1.3~`
 
 * You will need to update the version number anytime you update the plugin, this will ultimately let the plugin know that a new version is available.
 
@@ -52,6 +52,12 @@ A: See the discussion and answer [here](https://github.com/jkudish/WordPress-Git
 
 Changelog
 ===========
+
+### 1.3
+* Fixed all php notices
+* Fixed minor bugs
+* Added an example plugin that's used as a test
+* Minor documentation/readme adjustments
 
 ### 1.2
 * Added phpDoc and minor syntax/readability adjusments, props [@franz-josef-kaiser](https://github.com/franz-josef-kaiser), [@GaryJones](https://github.com/GaryJones)

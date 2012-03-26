@@ -7,9 +7,10 @@ if ( !defined('ABSPATH') )
 if ( ! class_exists( 'WPGitHubUpdater' ) ) :
 
 /**
- * @version 1.2
+ * @version 1.3
  * @author Joachim Kudish <info@jkudish.com>
  * @link http://jkudish.com
+ * @package GithubUpdater
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @copyright Copyright (c) 2011, Joachim Kudish
  *
@@ -59,7 +60,7 @@ class WPGitHubUpdater {
 
 		$this->set_defaults();
 
-		if ( WP_DEBUG )
+		if ( ( defined('WP_DEBUG') && WP_DEBUG ) || ( defined('WP_GITHUB_FORCE_UPDATE') || WP_GITHUB_FORCE_UPDATE ) )
 			add_action( 'init', array( $this, 'delete_transients' ) );
 
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'api_check' ) );
@@ -143,15 +144,21 @@ class WPGitHubUpdater {
 		if ( !isset( $version ) || !$version || '' == $version ) {
 
 			$raw_response = wp_remote_get(
-				$this->config['raw_url'].'/README.md',
-				$this->config['sslverify'],
+				trailingslashit($this->config['raw_url']).'README.md',
+				array(
+					'sslverify' => $this->config['sslverify'],
+				)
 			);
 
 			if ( is_wp_error( $raw_response ) )
 				return false;
 
 			$__version	= explode( '~Current Version:', $raw_response['body'] );
-			$_version	= explode( '~', $__version[1] );
+
+			if ( !isset($__version['1']) )
+				return false;
+
+			$_version	= explode( '~', $__version['1'] );
 			$version	= $_version[0];
 
 			// refresh every 6 hours
@@ -198,9 +205,7 @@ class WPGitHubUpdater {
 	 */
 	public function get_date() {
 		$_date = $this->get_github_data();
-		$date	= $_date->updated_at;
-		$date	= date( 'Y-m-d', strtotime( $_date->updated_at ) );
-		return $date;
+		return ( !empty($_date->updated_at) ) ? date( 'Y-m-d', strtotime( $_date->updated_at ) ) : false;
 	}
 
 
@@ -212,7 +217,7 @@ class WPGitHubUpdater {
 	 */
 	public function get_description() {
 		$_description = $this->get_github_data();
-		return $_description->description;
+		return ( !empty($_description->description) ) ? $_description->description : false;
 	}
 
 
@@ -243,8 +248,9 @@ class WPGitHubUpdater {
 		if ( empty( $transient->checked ) )
 			return $transient;
 
-		// check the version and make sure it's new
+		// check the version and decide if it's new
 		$update = version_compare( $this->config['new_version'], $this->config['version'] );
+
 		if ( 1 === $update ) {
 			$response = new stdClass;
 			$response->new_version = $this->config['new_version'];
