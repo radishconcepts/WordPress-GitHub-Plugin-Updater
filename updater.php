@@ -46,14 +46,14 @@ class WPGitHubUpdater {
 
 		$defaults = array(
 			'slug' => plugin_basename(__FILE__),
-			'proper_folder_name' => plugin_basename(__FILE__),
+			'proper_folder_name' => dirname( plugin_basename(__FILE__) ),
 			'api_url' => 'https://api.github.com/repos/jkudish/WordPress-GitHub-Plugin-Updater',
 			'raw_url' => 'https://raw.github.com/jkudish/WordPress-GitHub-Plugin-Updater/master',
 			'github_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater',
 			'zip_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/zipball/master',
 			'sslverify' => true,
-    	'requires' => $wp_version,
-    	'tested' => $wp_version,
+            'requires' => $wp_version,
+            'tested' => $wp_version,
 		);
 
 		$this->config = wp_parse_args( $config, $defaults );
@@ -144,14 +144,23 @@ class WPGitHubUpdater {
 		if ( !isset( $version ) || !$version || '' == $version ) {
 
 			$raw_response = wp_remote_get(
-				trailingslashit($this->config['raw_url']).'README.md',
+				trailingslashit($this->config['raw_url']).'readme.txt',
 				array(
 					'sslverify' => $this->config['sslverify'],
 				)
 			);
 
-			if ( is_wp_error( $raw_response ) )
-				return false;
+			if ( is_wp_error( $raw_response ) ) {
+                $raw_response = wp_remote_get(
+                    trailingslashit($this->config['raw_url']).'README.md',
+                    array(
+                        'sslverify' => $this->config['sslverify'],
+                    )
+                );
+
+                if ( is_wp_error( $raw_response ) )
+                    return false;
+            }
 
 			$__version	= explode( '~Current Version:', $raw_response['body'] );
 
@@ -160,6 +169,7 @@ class WPGitHubUpdater {
 
 			$_version	= explode( '~', $__version['1'] );
 			$version	= $_version[0];
+
 
 			// refresh every 6 hours
 			set_site_transient( $this->config['slug'].'_new_version', $version, 60*60*6 );
@@ -254,7 +264,7 @@ class WPGitHubUpdater {
 		if ( 1 === $update ) {
 			$response = new stdClass;
 			$response->new_version = $this->config['new_version'];
-			$response->slug = $this->config['slug'];
+			$response->slug = $this->config['proper_folder_name'];
 			$response->url = $this->config['github_url'];
 			$response->package = $this->config['zip_url'];
 
@@ -276,23 +286,23 @@ class WPGitHubUpdater {
 	 * @param object $args plugin arguments
 	 * @return object $response the plugin info
 	 */
-	public function get_plugin_info( $false, $action, $args ) {
+	public function get_plugin_info( $false, $action, $response ) {
 
 		// Check if this call API is for the right plugin
-		if ( $args->slug != $this->config['slug'] )
+		if ( $response->slug != $this->config['slug'] )
 			return false;
 
-    $response->slug = $this->config['slug'];
-    $response->plugin_name  = $this->config['plugin_name'];
-    $response->version = $this->config['new_version'];
-    $response->author = $this->config['author'];
-    $response->homepage = $this->config['homepage'];
-    $response->requires = $this->config['requires'];
-    $response->tested = $this->config['tested'];
-    $response->downloaded   = 0;
-    $response->last_updated = $this->config['last_updated'];
-    $response->sections = array( 'description' => $this->config['description'] );
-    $response->download_link = $this->config['zip_url'];
+        $response->slug = $this->config['slug'];
+        $response->plugin_name  = $this->config['plugin_name'];
+        $response->version = $this->config['new_version'];
+        $response->author = $this->config['author'];
+        $response->homepage = $this->config['homepage'];
+        $response->requires = $this->config['requires'];
+        $response->tested = $this->config['tested'];
+        $response->downloaded   = 0;
+        $response->last_updated = $this->config['last_updated'];
+        $response->sections = array( 'description' => $this->config['description'] );
+        $response->download_link = $this->config['zip_url'];
 
 		return $response;
 	}
