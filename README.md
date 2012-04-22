@@ -17,15 +17,15 @@ Usage instructions
 		$config = array(
 			'slug' => plugin_basename(__FILE__), // this is the slug of your plugin
 			'proper_folder_name' => 'plugin-name', // this is the name of the folder your plugin lives in
-			'api_url' => 'https://api.github.com/repos/jkudish/WordPress-GitHub-Plugin-Updater', // the github API url of your github repo
-			'raw_url' => 'https://raw.github.com/jkudish/master/WordPress-GitHub-Plugin-Updater', // the github raw url of your github repo
-			'github_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater', // the github url of your github repo
-			'zip_url' => 'https://github.com/jkudish/JigoShop-Software-Add-on/zipball/master', // the zip url of the github repo
+			'api_url' => 'https://api.github.com/repos/username/repository-name', // the github API url of your github repo
+			'raw_url' => 'https://raw.github.com/username/repository-name/master', // the github raw url of your github repo
+			'github_url' => 'https://github.com/username/repository-name', // the github url of your github repo
+			'zip_url' => 'https://github.com/username/repository-name/zipball/master', // the zip url of the github repo
 			'sslverify' => true // wether WP should check the validity of the SSL cert when getting an update, see https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2 and https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4 for details
 			'requires' => '3.0', // which version of WordPress does your plugin require?
 			'tested' => '3.3', // which version of WordPress is your plugin tested up to?
 		);
-		new wp_github_updater($config);
+		new WPGitHubUpdater($config);
 	}
 	</pre>
 
