@@ -42,7 +42,7 @@ Changelog
 ===========
 
 ### 1.4
-* Minor fixes from @sc0ttkclark's use in Pods Framework
+* Minor fixes from [@sc0ttkclark](https://github.com/sc0ttkclark)'s use in Pods Framework
 * Added readme file into config
 
 ### 1.3
