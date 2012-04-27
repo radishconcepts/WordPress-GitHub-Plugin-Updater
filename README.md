@@ -24,7 +24,7 @@ Usage instructions
 			'sslverify' => true // wether WP should check the validity of the SSL cert when getting an update, see https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2 and https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4 for details
 			'requires' => '3.0', // which version of WordPress does your plugin require?
 			'tested' => '3.3', // which version of WordPress is your plugin tested up to?
-			'readme' => 'readme.txt' // which readme file to use, defaults to README.md
+			'readme' => 'README.MD' // which file to use as the readme for the version number
 		);
 		new WPGitHubUpdater($config);
 	}
@@ -32,27 +32,18 @@ Usage instructions
 
 * In your Github repository, you will need to include the following line (formatted exactly like this) anywhere in your Readme file:
 
-	`~Current Version:1.3~`
+	`~Current Version:1.4~`
 
 * You will need to update the version number anytime you update the plugin, this will ultimately let the plugin know that a new version is available.
 
 * **Note**: this class will unfortunately not work with a private repository, your repository needs to be publicly accessible. If anyone knows how to make this work for private repositories, please get in touch!
 
-FAQ
-===========
-
-Q: I am getting the following error:
-	<pre>
-	Download failed. SSL certificate problem, verify that the CA cert is OK. Details: error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed
-	</pre>
-
-A: See the discussion and answer [here](https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2)
-
-**UPDATE**: this is now fixed in the class thanks to [@pmichael](https://github.com/pmichael), [details here](https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4)
-
-
 Changelog
 ===========
+
+### 1.4
+* Minor fixes from @sc0ttkclark's use in Pods Framework
+* Added readme file into config
 
 ### 1.3
 * Fixed all php notices

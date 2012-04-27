@@ -7,7 +7,7 @@ if ( !defined('ABSPATH') )
 if ( ! class_exists( 'WPGitHubUpdater' ) ) :
 
 /**
- * @version 1.3
+ * @version 1.4
  * @author Joachim Kudish <info@jkudish.com>
  * @link http://jkudish.com
  * @package GithubUpdater
