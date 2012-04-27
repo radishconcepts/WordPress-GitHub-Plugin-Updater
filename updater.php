@@ -165,7 +165,6 @@ class WPGitHubUpdater {
 			$_version	= explode( '~', $__version['1'] );
 			$version	= $_version[0];
 
-
 			// refresh every 6 hours
 			set_site_transient( $this->config['slug'].'_new_version', $version, 60*60*6 );
 		}
