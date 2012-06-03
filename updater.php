@@ -45,15 +45,15 @@ class WPGitHubUpdater {
 		global $wp_version;
 
 		$defaults = array(
-			'slug' => plugin_basename(__FILE__),
-			'proper_folder_name' => dirname( plugin_basename(__FILE__) ),
-			'api_url' => 'https://api.github.com/repos/jkudish/WordPress-GitHub-Plugin-Updater',
-			'raw_url' => 'https://raw.github.com/jkudish/WordPress-GitHub-Plugin-Updater/master',
-			'github_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater',
-			'zip_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/zipball/master',
-			'sslverify' => true,
-			'requires' => $wp_version,
-			'tested' => $wp_version
+			'slug'              => plugin_basename(__FILE__),
+			'proper_folder_name'=> dirname( plugin_basename(__FILE__) ),
+			'api_url'           => 'https://api.github.com/repos/jkudish/WordPress-GitHub-Plugin-Updater',
+			'raw_url'           => 'https://raw.github.com/jkudish/WordPress-GitHub-Plugin-Updater/master',
+			'github_url'        => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater',
+			'zip_url'           => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/zipball/master',
+			'sslverify'         => true,
+			'requires'          => $wp_version,
+			'tested'            => $wp_version
 		);
 
 		$this->config = wp_parse_args( $config, $defaults );
@@ -258,10 +258,10 @@ class WPGitHubUpdater {
 
 		if ( 1 === $update ) {
 			$response = new stdClass;
-			$response->new_version = $this->config['new_version'];
-			$response->slug = $this->config['proper_folder_name'];
-			$response->url = $this->config['github_url'];
-			$response->package = $this->config['zip_url'];
+			$response->new_version= $this->config['new_version'];
+			$response->slug       = $this->config['proper_folder_name'];
+			$response->url        = $this->config['github_url'];
+			$response->package    = $this->config['zip_url'];
 
 			// If response is false, don't alter the transient
 			if ( false !== $response )
@@ -287,17 +287,17 @@ class WPGitHubUpdater {
 		if ( $response->slug != $this->config['slug'] )
 			return false;
 
-		$response->slug = $this->config['slug'];
+		$response->slug         = $this->config['slug'];
 		$response->plugin_name  = $this->config['plugin_name'];
-		$response->version = $this->config['new_version'];
-		$response->author = $this->config['author'];
-		$response->homepage = $this->config['homepage'];
-		$response->requires = $this->config['requires'];
-		$response->tested = $this->config['tested'];
+		$response->version      = $this->config['new_version'];
+		$response->author       = $this->config['author'];
+		$response->homepage     = $this->config['homepage'];
+		$response->requires     = $this->config['requires'];
+		$response->tested       = $this->config['tested'];
 		$response->downloaded   = 0;
 		$response->last_updated = $this->config['last_updated'];
-		$response->sections = array( 'description' => $this->config['description'] );
-		$response->download_link = $this->config['zip_url'];
+		$response->sections     = array( 'description'=> $this->config['description'] );
+		$response->download_link= $this->config['zip_url'];
 
 		return $response;
 	}
