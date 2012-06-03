@@ -55,7 +55,7 @@ function github_plugin_updater_test_init() {
 			'sslverify' => true,
 			'requires' => '3.0',
 			'tested' => '3.3',
-			'readme' => 'readme.txt'
+			'readme' => 'README.md'
 		);
 
 		new WPGitHubUpdater($config);
