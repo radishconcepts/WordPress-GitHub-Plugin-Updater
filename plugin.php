@@ -115,7 +115,7 @@ class WPGitHubUpdaterSetup{
 	 */
 	function add_page() {
 		if ( current_user_can ( 'manage_options' ) ) {
-			$this->options_page_hookname = add_plugins_page ( __( 'Github Updates', 'ghupdate' ), __( 'Github Updates', 'ghupdate' ), 'manage_options', 'github-updater', array( $this, 'admin_page' ) );
+			$this->options_page_hookname = add_plugins_page ( __( 'Github Updates', 'github_plugin_updater' ), __( 'Github Updates', 'github_plugin_updater' ), 'manage_options', 'github-updater', array( $this, 'admin_page' ) );
 			add_filter( "network_admin_plugin_action_links_{$this->plugin_basename}", array( $this, 'filter_plugin_actions' ) );
 			add_filter( "plugin_action_links_{$this->plugin_basename}", array( $this, 'filter_plugin_actions' ) );
 		}
@@ -156,7 +156,7 @@ class WPGitHubUpdaterSetup{
 			)
 		);
 		add_settings_field(
-			'gh_authorize', '<p class="submit"><input class="button-primary" type="submit" value="'.__('Authorize with Github', 'ghupdate').'" /></p>', null, 'github-updater', 'ghupdate_private', null
+			'gh_authorize', '<p class="submit"><input class="button-primary" type="submit" value="'.__('Authorize with Github', 'github_plugin_updater').'" /></p>', null, 'github-updater', 'ghupdate_private', null
 		);
 
 	}
@@ -218,10 +218,10 @@ class WPGitHubUpdaterSetup{
 		$valid['access_token']  = strip_tags( $input['access_token'] );
 
 		if ( empty( $valid['client_id']) ) {
-			add_settings_error( 'client_id', 'no-client-id', 'Please input a Client ID before authorizing.', 'error' );
+			add_settings_error( 'client_id', 'no-client-id', __('Please input a Client ID before authorizing.', 'github_plugin_updater'), 'error' );
 		}
 		if ( empty( $valid['client_secret']) ) {
-			add_settings_error( 'client_secret', 'no-client-secret', 'Please input a Client Secret before authorizing.', 'error' );
+			add_settings_error( 'client_secret', 'no-client-secret', __('Please input a Client Secret before authorizing.', 'github_plugin_updater'), 'error' );
 		}
 
 		return $valid;
@@ -234,7 +234,7 @@ class WPGitHubUpdaterSetup{
 	 * @return array
 	 */
 	function filter_plugin_actions ( $links ) { 
-		$settings_link = '<a href="plugins.php?page=github-updater">' . __( 'Setup', 'ghupdate' ) . '</a>'; 
+		$settings_link = '<a href="plugins.php?page=github-updater">' . __( 'Setup', 'github_plugin_updater' ) . '</a>'; 
 		array_unshift ( $links, $settings_link ); 
 		return $links;
 	}
@@ -251,7 +251,7 @@ class WPGitHubUpdaterSetup{
 			
 			<div class="head-wrap">
 				<?php screen_icon('plugins'); ?>
-				<h2><?php _e( 'Setup Github Updates' , 'ghupdate' ); ?></h2>
+				<h2><?php _e( 'Setup Github Updates' , 'github_plugin_updater' ); ?></h2>
 			</div>
 
 			<div class="postbox-container primary">
