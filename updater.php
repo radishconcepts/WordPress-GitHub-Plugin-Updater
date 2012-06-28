@@ -53,7 +53,8 @@ class WPGitHubUpdater {
 			'zip_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/zipball/master',
 			'sslverify' => true,
 			'requires' => $wp_version,
-			'tested' => $wp_version
+			'tested' => $wp_version,
+			'access_token' => '',
 		);
 
 		$this->config = wp_parse_args( $config, $defaults );
@@ -81,6 +82,13 @@ class WPGitHubUpdater {
 	 * @return void
 	 */
 	public function set_defaults() {
+		if ( !empty($this->config['access_token']) ) {
+			$this->config['access_token'] = 'access_token='.$this->config['access_token'];
+
+			// See Downloading a zipball (private repo) https://help.github.com/articles/downloading-files-from-the-command-line
+			$this->config['zip_url'] = str_replace('//github.com/', '//api.github.com/repos/', $this->config['zip_url']).'?'.$this->config['access_token'];
+		}
+
 
 		if ( ! isset( $this->config['new_version'] ) )
 			$this->config['new_version'] = $this->get_new_version();
@@ -106,6 +114,7 @@ class WPGitHubUpdater {
 
 		if ( ! isset( $this->config['readme'] ) )
 			$this->config['readme'] = 'README.md';
+
 	}
 
 
@@ -147,7 +156,7 @@ class WPGitHubUpdater {
 		if ( !isset( $version ) || !$version || '' == $version ) {
 
 			$raw_response = wp_remote_get(
-				trailingslashit($this->config['raw_url']).$this->config['readme'],
+				trailingslashit($this->config['raw_url']).$this->config['readme'].'?'.$this->config['access_token'],
 				array(
 					'sslverify' => $this->config['sslverify'],
 				)
@@ -183,8 +192,10 @@ class WPGitHubUpdater {
 
 		if ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) {
 			$github_data = wp_remote_get(
-				 $this->config['api_url']
-				,$this->config['sslverify']
+				$this->config['api_url'].'?'.$this->config['access_token'],
+				array(
+					'sslverify' => $this->config['sslverify'],
+				)
 			);
 
 			if ( is_wp_error( $github_data ) )
@@ -258,7 +269,7 @@ class WPGitHubUpdater {
 			$response = new stdClass;
 			$response->new_version = $this->config['new_version'];
 			$response->slug = $this->config['proper_folder_name'];
-			$response->url = $this->config['github_url'];
+			$response->url = $this->config['github_url'].'?'.$this->config['access_token'];
 			$response->package = $this->config['zip_url'];
 
 			// If response is false, don't alter the transient
