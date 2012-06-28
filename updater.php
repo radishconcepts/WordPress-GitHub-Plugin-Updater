@@ -62,7 +62,7 @@ class WPGitHubUpdater {
 		$this->set_defaults();
 
 		if ( ( defined('WP_DEBUG') && WP_DEBUG ) || ( defined('WP_GITHUB_FORCE_UPDATE') || WP_GITHUB_FORCE_UPDATE ) )
-			add_action( 'init', array( $this, 'delete_transients' ) );
+			add_action( 'init', array( $this, 'delete_transients' ), 11 );
 
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'api_check' ) );
 
