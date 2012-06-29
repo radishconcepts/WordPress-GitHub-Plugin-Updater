@@ -9,32 +9,19 @@ The code is still in it's infancy, but [I am currently using it](https://github.
 Usage instructions
 ===========
 
-* The class should be included somewhere in your plugin. You will need to require the file (example: `include_once('updater.php');`).
-* You will need to initialize the class using something similar to this:
+* The plugin can be either be activated in WordPress, or updater.php can be included in your own plugin using `include_once 'updater.php';`.
+* Either way, the plugin will activate Github updates for every plugin with a github.com repository as the Plugin URI in its header:
 
 	<pre>
-	if (is_admin()) { // note the use of is_admin() to double check that this is happening in the admin
-		$config = array(
-			'slug' => plugin_basename(__FILE__), // this is the slug of your plugin
-			'proper_folder_name' => 'plugin-name', // this is the name of the folder your plugin lives in
-			'api_url' => 'https://api.github.com/repos/username/repository-name', // the github API url of your github repo
-			'raw_url' => 'https://raw.github.com/username/repository-name/master', // the github raw url of your github repo
-			'github_url' => 'https://github.com/username/repository-name', // the github url of your github repo
-			'zip_url' => 'https://github.com/username/repository-name/zipball/master', // the zip url of the github repo
-			'sslverify' => true // wether WP should check the validity of the SSL cert when getting an update, see https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2 and https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4 for details
-			'requires' => '3.0', // which version of WordPress does your plugin require?
-			'tested' => '3.3', // which version of WordPress is your plugin tested up to?
-			'readme' => 'README.MD' // which file to use as the readme for the version number
-		);
-		new WPGitHubUpdater($config);
-	}
+	/*
+	Plugin Name: Plugin Example
+	Plugin URI: https://github.com/jkudish/WordPress-GitHub-Plugin-Updater
+	Requires: 3.0
+	Tested: 3.4
+	*/
 	</pre>
 
-* In your Github repository, you will need to include the following line (formatted exactly like this) anywhere in your Readme file:
-
-	`~Current Version:1.4~`
-
-* You will need to update the version number anytime you update the plugin, this will ultimately let the plugin know that a new version is available.
+* In your Github repository, you will need to tag releases with new version numbers. New commits will not trigger an update until they are tagged with a higher version number. Don't forget to push your tags: `git push origin --tags`
 
 * **Note**: this class will unfortunately not work with a private repository, your repository needs to be publicly accessible. If anyone knows how to make this work for private repositories, please get in touch!
 
