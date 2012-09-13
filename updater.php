@@ -183,8 +183,10 @@ class WPGitHubUpdater {
 
 		if ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) {
 			$github_data = wp_remote_get(
-				 $this->config['api_url']
-				,$this->config['sslverify']
+				$this->config['api_url'],
+				array(
+					'sslverify' => $this->config['sslverify'],
+				)
 			);
 
 			if ( is_wp_error( $github_data ) )
