@@ -105,7 +105,7 @@ class WPGitHubUpdaterSetup{
 		add_action( 'admin_menu', array( $this, 'add_page' ) );
 		add_action( 'network_admin_menu', array( $this, 'add_page' ) );
 
-		add_action('wp_ajax_set_github_oauth_key', array($this, 'ajax_set_github_oauth_key') );
+		add_action( 'wp_ajax_set_github_oauth_key', array( $this, 'ajax_set_github_oauth_key') );
 	}
 
 	/**
@@ -274,10 +274,19 @@ class WPGitHubUpdaterSetup{
 			return;
 		}
 
-		$redirect = urlencode(admin_url('admin-ajax.php?action=set_github_oauth_key'));
+		$redirect_uri = urlencode(admin_url('admin-ajax.php?action=set_github_oauth_key'));
 
 		// Send user to Github for account authorization
-		header( "Location: https://github.com/login/oauth/authorize?scope=repo&client_id={$gh['client_id']}&redirect_uri=$redirect");
+
+		$query = 'https://github.com/login/oauth/authorize';
+		$query_args = array(
+			'scope' => 'repo',
+			'client_id' => $gh['client_id'],
+			'redirect_uri' => $redirect_uri,
+		);
+		$query = add_query_arg($query_args, $query);
+		wp_redirect( $query );
+
 		exit;
 
 	}
@@ -285,9 +294,19 @@ class WPGitHubUpdaterSetup{
 	public function ajax_set_github_oauth_key() {
 		$gh = get_option('ghupdate');
 
+		$query = admin_url( 'plugins.php' );
+		$query = add_query_arg( array('page' => 'github-updater'), $query );
+
 		if ( isset($_GET['code']) ) {
 			// Receive authorized token
-			$response = wp_remote_get( "https://github.com/login/oauth/access_token?client_id={$gh['client_id']}&client_secret={$gh['client_secret']}&code={$_GET['code']}", array('sslverify' => false) );
+			$query = 'https://github.com/login/oauth/access_token';
+			$query_args = array(
+				'client_id' => $gh['client_id'],
+				'client_secret' => $gh['client_secret'],
+				'code' => $_GET['code'],
+			);
+			$query = add_query_arg( $query_args, $query );
+			$response = wp_remote_get( $query, array('sslverify' => false) );
 			parse_str( $response['body'] ); // populates $access_token, $token_type
 
 			if ( !empty( $access_token )) {
@@ -295,11 +314,12 @@ class WPGitHubUpdaterSetup{
 				update_option('ghupdate', $gh );
 			}
 
-			header( 'Location: '.admin_url('plugins.php?page=github-updater') );
+			wp_redirect( admin_url('plugins.php?page=github-updater') );
 			exit;
 
 		}else {
-			header( 'Location: '.admin_url('plugins.php?page=github-updater&authorize=false') );
+			$query = add_query_arg( array('authorize'=>'false'), $query );
+			wp_redirect($query);
 			exit;
 		}
 	}

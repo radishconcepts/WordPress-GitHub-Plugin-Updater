@@ -83,10 +83,13 @@ class WPGitHubUpdater {
 	 */
 	public function set_defaults() {
 		if ( !empty($this->config['access_token']) ) {
-			$this->config['access_token'] = 'access_token='.$this->config['access_token'];
-
 			// See Downloading a zipball (private repo) https://help.github.com/articles/downloading-files-from-the-command-line
-			$this->config['zip_url'] = str_replace('//github.com/', '//api.github.com/repos/', $this->config['zip_url']).'?'.$this->config['access_token'];
+			extract( parse_url( $this->config['zip_url'] ) ); // $scheme, $host, $path
+
+			$zip_url = $scheme . '://api.github.com/repos' . $path;
+			$zip_url = add_query_arg( array( 'access_token' => $this->config['access_token'] ), $zip_url );
+
+			$this->config['zip_url'] = $zip_url;
 		}
 
 
@@ -153,14 +156,12 @@ class WPGitHubUpdater {
 	public function get_new_version() {
 		$version = get_site_transient( $this->config['slug'].'_new_version' );
 
-		if ( !isset( $version ) || !$version || '' == $version ) {
+		if ( true || !isset( $version ) || !$version || '' == $version ) {
 
-			$raw_response = wp_remote_get(
-				trailingslashit($this->config['raw_url']).$this->config['readme'].'?'.$this->config['access_token'],
-				array(
-					'sslverify' => $this->config['sslverify'],
-				)
-			);
+			$query = trailingslashit( $this->config['raw_url'] ) . $this->config['readme'];
+			$query = add_query_arg( array('access_token' => $this->config['access_token']), $query );
+
+			$raw_response = wp_remote_get( $query, array('sslverify' => $this->config['sslverify']) );
 
 			if ( is_wp_error( $raw_response ) )
 				return false;
@@ -191,12 +192,10 @@ class WPGitHubUpdater {
 		$github_data = get_site_transient( $this->config['slug'].'_github_data' );
 
 		if ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) {
-			$github_data = wp_remote_get(
-				$this->config['api_url'].'?'.$this->config['access_token'],
-				array(
-					'sslverify' => $this->config['sslverify'],
-				)
-			);
+			$query = $this->config['api_url'];
+			$query = add_query_arg( array('access_token' => $this->config['access_token']), $query );
+
+			$github_data = wp_remote_get( $query, array('sslverify' => $this->config['sslverify']) );
 
 			if ( is_wp_error( $github_data ) )
 				return false;
@@ -269,7 +268,7 @@ class WPGitHubUpdater {
 			$response = new stdClass;
 			$response->new_version = $this->config['new_version'];
 			$response->slug = $this->config['proper_folder_name'];
-			$response->url = $this->config['github_url'].'?'.$this->config['access_token'];
+			$response->url = add_query_arg( array('access_token' => $this->config['access_token']), $this->config['github_url'] );
 			$response->package = $this->config['zip_url'];
 
 			// If response is false, don't alter the transient
