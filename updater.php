@@ -60,9 +60,6 @@ class WPGitHubUpdater {
 
 		$this->set_defaults();
 
-		if ( ( defined('WP_DEBUG') && WP_DEBUG ) || ( defined('WP_GITHUB_FORCE_UPDATE') || WP_GITHUB_FORCE_UPDATE ) )
-			add_action( 'init', array( $this, 'delete_transients' ) );
-
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'api_check' ) );
 
 		// Hook into the plugin details screen
@@ -74,6 +71,17 @@ class WPGitHubUpdater {
 		
 		// set sslverify for zip download
 		add_filter( 'http_request_args', array( $this, 'http_request_sslverify' ), 10, 2 );
+	}
+
+
+	/**
+	 * Check wether or not the transients need to be overruled and API needs to be called for every single page load
+	 * 
+	 * @access private
+	 * @return bool overrule or not
+	 */
+	private function overrule_transients() {
+		return ( ( defined('WP_DEBUG') && WP_DEBUG ) || ( defined('WP_GITHUB_FORCE_UPDATE') || WP_GITHUB_FORCE_UPDATE ) );
 	}
 
 
@@ -139,21 +147,6 @@ class WPGitHubUpdater {
 
 
 	/**
-	 * Delete transients (runs when WP_DEBUG is on)
-	 * For testing purposes the site transient will be reset on each page load
-	 *
-	 * @since 1.0
-	 * @return void
-	 */
-	public function delete_transients() {
-		delete_site_transient( 'update_plugins' );
-		delete_site_transient( $this->config['slug'].'_new_version' );
-		delete_site_transient( $this->config['slug'].'_github_data' );
-		delete_site_transient( $this->config['slug'].'_changelog' );
-	}
-
-
-	/**
 	 * Get New Version from github
 	 *
 	 * @since 1.0
@@ -162,8 +155,7 @@ class WPGitHubUpdater {
 	public function get_new_version() {
 		$version = get_site_transient( $this->config['slug'].'_new_version' );
 
-		if ( !isset( $version ) || !$version || '' == $version ) {
-
+		if ( $this->overrule_transients() || ( ! isset( $version ) || ! $version || '' == $version ) ) {
 			$raw_response = wp_remote_get(
 				trailingslashit($this->config['raw_url']).$this->config['readme'],
 				array(
@@ -199,7 +191,7 @@ class WPGitHubUpdater {
 	public function get_github_data() {
 		$github_data = get_site_transient( $this->config['slug'].'_github_data' );
 
-		if ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) {
+		if ( $this->overrule_transients() || ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) ) {
 			$github_data = wp_remote_get(
 				$this->config['api_url'],
 				array(
