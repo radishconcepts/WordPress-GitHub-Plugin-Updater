@@ -174,7 +174,7 @@ class WPGitHubUpdater {
 	public function get_new_version() {
 		$version = get_site_transient( $this->config['slug'].'_new_version' );
 
-		if ( true || !isset( $version ) || !$version || '' == $version ) {
+		if ( !isset( $version ) || !$version || '' == $version ) {
 
 			$query = trailingslashit( $this->config['raw_url'] ) . $this->config['readme'];
 			$query = add_query_arg( array('access_token' => $this->config['access_token']), $query );
