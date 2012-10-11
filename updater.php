@@ -34,6 +34,11 @@ if ( ! class_exists( 'WPGitHubUpdater' ) ) :
 class WPGitHubUpdater {
 
 	/**
+	 * Temporary store the data fetched from GitHub, so it only gets loaded once per class instance
+	 */
+	private $github_data;
+
+	/**
 	 * Class Constructor
 	 *
 	 * @since 1.0
@@ -189,23 +194,30 @@ class WPGitHubUpdater {
 	 * @return array $github_data the data
 	 */
 	public function get_github_data() {
-		$github_data = get_site_transient( $this->config['slug'].'_github_data' );
+		if ( isset( $this->github_data ) && ! empty( $this->github_data ) ) {
+			$github_data = $this->github_data;
+		} else {
+			$github_data = get_site_transient( $this->config['slug'].'_github_data' );
 
-		if ( $this->overrule_transients() || ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) ) {
-			$github_data = wp_remote_get(
-				$this->config['api_url'],
-				array(
-					'sslverify' => $this->config['sslverify'],
-				)
-			);
+			if ( $this->overrule_transients() || ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) ) {
+				$github_data = wp_remote_get(
+					$this->config['api_url'],
+					array(
+						'sslverify' => $this->config['sslverify'],
+					)
+				);
 
-			if ( is_wp_error( $github_data ) )
-				return false;
+				if ( is_wp_error( $github_data ) )
+					return false;
 
-			$github_data = json_decode( $github_data['body'] );
+				$github_data = json_decode( $github_data['body'] );
 
-			// refresh every 6 hours
-			set_site_transient( $this->config['slug'].'_github_data', $github_data, 60*60*6);
+				// refresh every 6 hours
+				set_site_transient( $this->config['slug'].'_github_data', $github_data, 60*60*6);
+			}
+			
+			// Store the data in this class instance for future calls
+			$this->github_data = $github_data;
 		}
 
 		return $github_data;
