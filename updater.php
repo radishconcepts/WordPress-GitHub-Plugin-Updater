@@ -72,6 +72,9 @@ class WPGitHubUpdater {
 
 		// set timeout
 		add_filter( 'http_request_timeout', array( $this, 'http_request_timeout' ) );
+		
+		// set sslverify for zip download
+		add_filter( 'http_request_args', array( $this, 'http_request_sslverify' ), 10, 2 );
 	}
 
 
@@ -130,6 +133,21 @@ class WPGitHubUpdater {
 	public function http_request_timeout() {
 		return 2;
 	}
+
+	/**
+	 * Callback fn for the http_request_args filter
+	 *
+	 * @param $args
+	 * @param $url
+	 *
+	 * @return mixed
+	 */
+	public function http_request_sslverify ( $args, $url ) {
+		if ( $this->config[ 'zip_url' ] == $url )
+			$args[ 'sslverify' ] = $this->config[ 'sslverify' ];
+
+		return $args;
+        }
 
 
 	/**
