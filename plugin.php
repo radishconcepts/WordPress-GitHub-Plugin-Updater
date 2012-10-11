@@ -166,7 +166,7 @@ class WPGitHubUpdaterSetup{
 		<p>Updating from private repositories requires a one-time application setup and authorization. These steps will not need to be repeated for other sites once you receive your access token.</p>
 		<p>Follow these steps:</p>
 		<ol>
-			<li><a href="https://github.com/settings/applications/new" target="_blank">Create an application</a> with the <strong>URL</strong> and <strong>Callback URL</strong> both set to <code><?php echo bloginfo('url') ?></code></li>
+			<li><a href="https://github.com/settings/applications/new" target="_blank">Create an application</a> with the <strong>Main URL</strong> and <strong>Callback URL</strong> both set to <code><?php echo bloginfo('url') ?></code></li>
 			<li>Copy the <strong>Client ID</strong> and <strong>Client Secret</strong> from your <a href="https://github.com/settings/applications" target="_blank">application details</a> into the fields below.</li>
 			<li><a href="javascript:document.forms['ghupdate'].submit();">Authorize with Github</a>.</li>
 		</ol>
