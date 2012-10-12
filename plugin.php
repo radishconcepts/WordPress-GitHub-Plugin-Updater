@@ -15,7 +15,7 @@ License: GPLv2
  * @package GithubUpdater
  * @author Joachim Kudish @link http://jkudish.com
  * @since 1.3
- * @version 1.4
+ * @version 1.5
 */
 
 /*
