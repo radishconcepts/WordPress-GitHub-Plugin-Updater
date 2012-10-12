@@ -24,7 +24,8 @@ Usage instructions
 			'sslverify' => true // wether WP should check the validity of the SSL cert when getting an update, see https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2 and https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4 for details
 			'requires' => '3.0', // which version of WordPress does your plugin require?
 			'tested' => '3.3', // which version of WordPress is your plugin tested up to?
-			'readme' => 'README.MD' // which file to use as the readme for the version number
+			'readme' => 'README.md', // which file to use as the readme for the version number
+			'access_token' => '', // Access private repositories by authorizing under Appearance > Github Updates when this example plugin is installed
 		);
 		new WPGitHubUpdater($config);
 	}
@@ -40,6 +41,10 @@ Usage instructions
 
 Changelog
 ===========
+
+### 1.5
+* Support for private repositories added by [@pdclark](http://profiles.wordpress.org/pdclark)
+* Additional sslverify fix
 
 ### 1.4
 * Minor fixes from [@sc0ttkclark](https://github.com/sc0ttkclark)'s use in Pods Framework
