@@ -58,7 +58,8 @@ class WPGitHubUpdater {
 			'zip_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/zipball/master',
 			'sslverify' => true,
 			'requires' => $wp_version,
-			'tested' => $wp_version
+			'tested' => $wp_version,
+			'access_token' => '',
 		);
 
 		$this->config = wp_parse_args( $config, $defaults );
@@ -97,6 +98,16 @@ class WPGitHubUpdater {
 	 * @return void
 	 */
 	public function set_defaults() {
+		if ( !empty($this->config['access_token']) ) {
+			// See Downloading a zipball (private repo) https://help.github.com/articles/downloading-files-from-the-command-line
+			extract( parse_url( $this->config['zip_url'] ) ); // $scheme, $host, $path
+
+			$zip_url = $scheme . '://api.github.com/repos' . $path;
+			$zip_url = add_query_arg( array( 'access_token' => $this->config['access_token'] ), $zip_url );
+
+			$this->config['zip_url'] = $zip_url;
+		}
+
 
 		if ( ! isset( $this->config['new_version'] ) )
 			$this->config['new_version'] = $this->get_new_version();
@@ -122,6 +133,7 @@ class WPGitHubUpdater {
 
 		if ( ! isset( $this->config['readme'] ) )
 			$this->config['readme'] = 'README.md';
+
 	}
 
 
@@ -160,13 +172,12 @@ class WPGitHubUpdater {
 	public function get_new_version() {
 		$version = get_site_transient( $this->config['slug'].'_new_version' );
 
-		if ( $this->overrule_transients() || ( ! isset( $version ) || ! $version || '' == $version ) ) {
-			$raw_response = wp_remote_get(
-				trailingslashit($this->config['raw_url']).$this->config['readme'],
-				array(
-					'sslverify' => $this->config['sslverify'],
-				)
-			);
+		if ( $this->overrule_transients() || ( !isset( $version ) || !$version || '' == $version ) ) {
+
+			$query = trailingslashit( $this->config['raw_url'] ) . $this->config['readme'];
+			$query = add_query_arg( array('access_token' => $this->config['access_token']), $query );
+
+			$raw_response = wp_remote_get( $query, array('sslverify' => $this->config['sslverify']) );
 
 			if ( is_wp_error( $raw_response ) )
 				return false;
@@ -200,12 +211,10 @@ class WPGitHubUpdater {
 			$github_data = get_site_transient( $this->config['slug'].'_github_data' );
 
 			if ( $this->overrule_transients() || ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) ) {
-				$github_data = wp_remote_get(
-					$this->config['api_url'],
-					array(
-						'sslverify' => $this->config['sslverify'],
-					)
-				);
+				$query = $this->config['api_url'];
+				$query = add_query_arg( array('access_token' => $this->config['access_token']), $query );
+
+				$github_data = wp_remote_get( $query, array('sslverify' => $this->config['sslverify']) );
 
 				if ( is_wp_error( $github_data ) )
 					return false;
@@ -215,7 +224,7 @@ class WPGitHubUpdater {
 				// refresh every 6 hours
 				set_site_transient( $this->config['slug'].'_github_data', $github_data, 60*60*6);
 			}
-			
+
 			// Store the data in this class instance for future calls
 			$this->github_data = $github_data;
 		}
@@ -282,7 +291,7 @@ class WPGitHubUpdater {
 			$response = new stdClass;
 			$response->new_version = $this->config['new_version'];
 			$response->slug = $this->config['proper_folder_name'];
-			$response->url = $this->config['github_url'];
+			$response->url = add_query_arg( array('access_token' => $this->config['access_token']), $this->config['github_url'] );
 			$response->package = $this->config['zip_url'];
 
 			// If response is false, don't alter the transient
