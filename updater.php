@@ -72,7 +72,7 @@ class WPGitHubUpdater {
 
 		// set timeout
 		add_filter( 'http_request_timeout', array( $this, 'http_request_timeout' ) );
-		
+
 		// set sslverify for zip download
 		add_filter( 'http_request_args', array( $this, 'http_request_sslverify' ), 10, 2 );
 	}
@@ -176,7 +176,7 @@ class WPGitHubUpdater {
 
 		if ( !isset( $version ) || !$version || '' == $version ) {
 
-			$query = trailingslashit( $this->config['raw_url'] ) . $this->config['readme'];
+			$query = trailingslashit( $this->config['raw_url'] ) . basename( $this->config['slug'] );
 			$query = add_query_arg( array('access_token' => $this->config['access_token']), $query );
 
 			$raw_response = wp_remote_get( $query, array('sslverify' => $this->config['sslverify']) );
@@ -184,13 +184,12 @@ class WPGitHubUpdater {
 			if ( is_wp_error( $raw_response ) )
 				return false;
 
-			$__version	= explode( '~Current Version:', $raw_response['body'] );
+			preg_match( '#^\s*Version\:\s*(.*)$#im', $raw_response['body'], $matches );
 
-			if ( !isset($__version['1']) )
+			if ( empty( $matches[1] ) )
 				return false;
 
-			$_version	= explode( '~', $__version['1'] );
-			$version	= $_version[0];
+			$version = $matches[1];
 
 			// refresh every 6 hours
 			set_site_transient( $this->config['slug'].'_new_version', $version, 60*60*6 );
