@@ -34,6 +34,11 @@ if ( ! class_exists( 'WPGitHubUpdater' ) ) :
 class WPGitHubUpdater {
 
 	/**
+	 * Temporary store the data fetched from GitHub, so it only gets loaded once per class instance
+	 */
+	private $github_data;
+
+	/**
 	 * Class Constructor
 	 *
 	 * @since 1.0
@@ -61,9 +66,6 @@ class WPGitHubUpdater {
 
 		$this->set_defaults();
 
-		if ( ( defined('WP_DEBUG') && WP_DEBUG ) || ( defined('WP_GITHUB_FORCE_UPDATE') || WP_GITHUB_FORCE_UPDATE ) )
-			add_action( 'init', array( $this, 'delete_transients' ), 11 );
-
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'api_check' ) );
 
 		// Hook into the plugin details screen
@@ -75,6 +77,17 @@ class WPGitHubUpdater {
 		
 		// set sslverify for zip download
 		add_filter( 'http_request_args', array( $this, 'http_request_sslverify' ), 10, 2 );
+	}
+
+
+	/**
+	 * Check wether or not the transients need to be overruled and API needs to be called for every single page load
+	 * 
+	 * @access private
+	 * @return bool overrule or not
+	 */
+	private function overrule_transients() {
+		return ( ( defined('WP_DEBUG') && WP_DEBUG ) || ( defined('WP_GITHUB_FORCE_UPDATE') || WP_GITHUB_FORCE_UPDATE ) );
 	}
 
 
@@ -151,21 +164,6 @@ class WPGitHubUpdater {
 
 
 	/**
-	 * Delete transients (runs when WP_DEBUG is on)
-	 * For testing purposes the site transient will be reset on each page load
-	 *
-	 * @since 1.0
-	 * @return void
-	 */
-	public function delete_transients() {
-		delete_site_transient( 'update_plugins' );
-		delete_site_transient( $this->config['slug'].'_new_version' );
-		delete_site_transient( $this->config['slug'].'_github_data' );
-		delete_site_transient( $this->config['slug'].'_changelog' );
-	}
-
-
-	/**
 	 * Get New Version from github
 	 *
 	 * @since 1.0
@@ -174,7 +172,7 @@ class WPGitHubUpdater {
 	public function get_new_version() {
 		$version = get_site_transient( $this->config['slug'].'_new_version' );
 
-		if ( !isset( $version ) || !$version || '' == $version ) {
+		if ( $this->overrule_transients() || ( !isset( $version ) || !$version || '' == $version ) ) {
 
 			$query = trailingslashit( $this->config['raw_url'] ) . $this->config['readme'];
 			$query = add_query_arg( array('access_token' => $this->config['access_token']), $query );
@@ -207,21 +205,28 @@ class WPGitHubUpdater {
 	 * @return array $github_data the data
 	 */
 	public function get_github_data() {
-		$github_data = get_site_transient( $this->config['slug'].'_github_data' );
+		if ( isset( $this->github_data ) && ! empty( $this->github_data ) ) {
+			$github_data = $this->github_data;
+		} else {
+			$github_data = get_site_transient( $this->config['slug'].'_github_data' );
 
-		if ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) {
-			$query = $this->config['api_url'];
-			$query = add_query_arg( array('access_token' => $this->config['access_token']), $query );
+			if ( $this->overrule_transients() || ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) ) {
+				$query = $this->config['api_url'];
+				$query = add_query_arg( array('access_token' => $this->config['access_token']), $query );
 
-			$github_data = wp_remote_get( $query, array('sslverify' => $this->config['sslverify']) );
+				$github_data = wp_remote_get( $query, array('sslverify' => $this->config['sslverify']) );
 
-			if ( is_wp_error( $github_data ) )
-				return false;
+				if ( is_wp_error( $github_data ) )
+					return false;
 
-			$github_data = json_decode( $github_data['body'] );
+				$github_data = json_decode( $github_data['body'] );
 
-			// refresh every 6 hours
-			set_site_transient( $this->config['slug'].'_github_data', $github_data, 60*60*6);
+				// refresh every 6 hours
+				set_site_transient( $this->config['slug'].'_github_data', $github_data, 60*60*6);
+			}
+
+			// Store the data in this class instance for future calls
+			$this->github_data = $github_data;
 		}
 
 		return $github_data;
