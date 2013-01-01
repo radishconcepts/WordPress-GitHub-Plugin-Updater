@@ -74,7 +74,7 @@ class WPGitHubUpdater {
 
 		// set timeout
 		add_filter( 'http_request_timeout', array( $this, 'http_request_timeout' ) );
-		
+
 		// set sslverify for zip download
 		add_filter( 'http_request_args', array( $this, 'http_request_sslverify' ), 10, 2 );
 	}
@@ -174,24 +174,41 @@ class WPGitHubUpdater {
 
 		if ( $this->overrule_transients() || ( !isset( $version ) || !$version || '' == $version ) ) {
 
-			$query = trailingslashit( $this->config['raw_url'] ) . $this->config['readme'];
-			$query = add_query_arg( array('access_token' => $this->config['access_token']), $query );
+			$query = trailingslashit( $this->config['raw_url'] ) . basename( $this->config['slug'] );
+			$query = add_query_arg( array( 'access_token' => $this->config['access_token'] ), $query );
 
-			$raw_response = wp_remote_get( $query, array('sslverify' => $this->config['sslverify']) );
+			$raw_response = wp_remote_get( $query, array( 'sslverify' => $this->config['sslverify'] ) );
 
 			if ( is_wp_error( $raw_response ) )
-				return false;
+				$version = false;
 
-			$__version	= explode( '~Current Version:', $raw_response['body'] );
+			preg_match( '#^\s*Version\:\s*(.*)$#im', $raw_response['body'], $matches );
 
-			if ( !isset($__version['1']) )
-				return false;
+			if ( empty( $matches[1] ) )
+				$version = false;
+			else
+				$version = $matches[1];
 
-			$_version	= explode( '~', $__version['1'] );
-			$version	= $_version[0];
+			// back compat for older readme version handling
+			$query = trailingslashit( $this->config['raw_url'] ) . $this->config['readme'];
+			$query = add_query_arg( array( 'access_token' => $this->config['access_token'] ), $query );
+
+			$raw_response = wp_remote_get( $query, array( 'sslverify' => $this->config['sslverify'] ) );
+
+			if ( is_wp_error( $raw_response ) )
+				return $version;
+
+			preg_match( '#^\s*`*~Current Version\:\s*([^~]*)~#im', $raw_response['body'], $__version );
+
+			if ( isset( $__version[1] ) ){
+				$version_readme	= $__version[1];
+				if( -1 == version_compare( $version, $version_readme ) )
+					$version = $version_readme;
+			}
 
 			// refresh every 6 hours
-			set_site_transient( $this->config['slug'].'_new_version', $version, 60*60*6 );
+			if( false !== $version )
+				set_site_transient( $this->config['slug'].'_new_version', $version, 60*60*6 );
 		}
 
 		return $version;
