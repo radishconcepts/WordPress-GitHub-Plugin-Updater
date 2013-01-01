@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) || class_exists( 'WPGitHubUpdater' ) || class_exists
 /**
  *
  *
- * @version 1.4
+ * @version 1.5
  * @author Joachim Kudish <info@jkudish.com>
  * @link http://jkudish.com
  * @package WP_GitHub_Updater
