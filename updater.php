@@ -1,37 +1,39 @@
 <?php
 
 // Prevent loading this file directly - Busted!
-if ( !defined('ABSPATH') )
-	die('-1');
+if ( !defined( 'ABSPATH' ) )
+	die( '-1' );
 
 if ( ! class_exists( 'WPGitHubUpdater' ) ) :
 
-/**
- * @version 1.4
- * @author Joachim Kudish <info@jkudish.com>
- * @link http://jkudish.com
- * @package GithubUpdater
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @copyright Copyright (c) 2011, Joachim Kudish
- *
- * GNU General Public License, Free Software Foundation
- * <http://creativecommons.org/licenses/GPL/2.0/>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-class WPGitHubUpdater {
+	/**
+	 *
+	 *
+	 * @version 1.4
+	 * @author Joachim Kudish <info@jkudish.com>
+	 * @link http://jkudish.com
+	 * @package GithubUpdater
+	 * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+	 * @copyright Copyright (c) 2011, Joachim Kudish
+	 *
+	 * GNU General Public License, Free Software Foundation
+	 * <http://creativecommons.org/licenses/GPL/2.0/>
+	 *
+	 * This program is free software; you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation; either version 2 of the License, or
+	 * (at your option) any later version.
+	 *
+	 * This program is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	 * GNU General Public License for more details.
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with this program; if not, write to the Free Software
+	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	 */
+	class WPGitHubUpdater {
 
 	/**
 	 * Temporary store the data fetched from GitHub, so it only gets loaded once per class instance
@@ -42,7 +44,7 @@ class WPGitHubUpdater {
 	 * Class Constructor
 	 *
 	 * @since 1.0
-	 * @param array $config configuration
+	 * @param array   $config configuration
 	 * @return void
 	 */
 	public function __construct( $config = array() ) {
@@ -50,8 +52,8 @@ class WPGitHubUpdater {
 		global $wp_version;
 
 		$defaults = array(
-			'slug' => plugin_basename(__FILE__),
-			'proper_folder_name' => dirname( plugin_basename(__FILE__) ),
+			'slug' => plugin_basename( __FILE__ ),
+			'proper_folder_name' => dirname( plugin_basename( __FILE__ ) ),
 			'api_url' => 'https://api.github.com/repos/jkudish/WordPress-GitHub-Plugin-Updater',
 			'raw_url' => 'https://raw.github.com/jkudish/WordPress-GitHub-Plugin-Updater/master',
 			'github_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater',
@@ -82,12 +84,12 @@ class WPGitHubUpdater {
 
 	/**
 	 * Check wether or not the transients need to be overruled and API needs to be called for every single page load
-	 * 
+	 *
 	 * @access private
 	 * @return bool overrule or not
 	 */
 	private function overrule_transients() {
-		return ( ( defined('WP_DEBUG') && WP_DEBUG ) || ( defined('WP_GITHUB_FORCE_UPDATE') || WP_GITHUB_FORCE_UPDATE ) );
+		return ( defined( 'WP_DEBUG' ) && WP_DEBUG ) || ( defined( 'WP_GITHUB_FORCE_UPDATE' ) || WP_GITHUB_FORCE_UPDATE );
 	}
 
 
@@ -98,7 +100,7 @@ class WPGitHubUpdater {
 	 * @return void
 	 */
 	public function set_defaults() {
-		if ( !empty($this->config['access_token']) ) {
+		if ( !empty( $this->config['access_token'] ) ) {
 			// See Downloading a zipball (private repo) https://help.github.com/articles/downloading-files-from-the-command-line
 			extract( parse_url( $this->config['zip_url'] ) ); // $scheme, $host, $path
 
@@ -150,17 +152,17 @@ class WPGitHubUpdater {
 	/**
 	 * Callback fn for the http_request_args filter
 	 *
-	 * @param $args
-	 * @param $url
+	 * @param unknown $args
+	 * @param unknown $url
 	 *
 	 * @return mixed
 	 */
-	public function http_request_sslverify ( $args, $url ) {
+	public function http_request_sslverify( $args, $url ) {
 		if ( $this->config[ 'zip_url' ] == $url )
 			$args[ 'sslverify' ] = $this->config[ 'sslverify' ];
 
 		return $args;
-        }
+	}
 
 
 	/**
@@ -200,14 +202,14 @@ class WPGitHubUpdater {
 
 			preg_match( '#^\s*`*~Current Version\:\s*([^~]*)~#im', $raw_response['body'], $__version );
 
-			if ( isset( $__version[1] ) ){
-				$version_readme	= $__version[1];
-				if( -1 == version_compare( $version, $version_readme ) )
+			if ( isset( $__version[1] ) ) {
+				$version_readme = $__version[1];
+				if ( -1 == version_compare( $version, $version_readme ) )
 					$version = $version_readme;
 			}
 
 			// refresh every 6 hours
-			if( false !== $version )
+			if ( false !== $version )
 				set_site_transient( $this->config['slug'].'_new_version', $version, 60*60*6 );
 		}
 
@@ -229,9 +231,9 @@ class WPGitHubUpdater {
 
 			if ( $this->overrule_transients() || ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) ) {
 				$query = $this->config['api_url'];
-				$query = add_query_arg( array('access_token' => $this->config['access_token']), $query );
+				$query = add_query_arg( array( 'access_token' => $this->config['access_token'] ), $query );
 
-				$github_data = wp_remote_get( $query, array('sslverify' => $this->config['sslverify']) );
+				$github_data = wp_remote_get( $query, array( 'sslverify' => $this->config['sslverify'] ) );
 
 				if ( is_wp_error( $github_data ) )
 					return false;
@@ -239,7 +241,7 @@ class WPGitHubUpdater {
 				$github_data = json_decode( $github_data['body'] );
 
 				// refresh every 6 hours
-				set_site_transient( $this->config['slug'].'_github_data', $github_data, 60*60*6);
+				set_site_transient( $this->config['slug'].'_github_data', $github_data, 60*60*6 );
 			}
 
 			// Store the data in this class instance for future calls
@@ -258,7 +260,7 @@ class WPGitHubUpdater {
 	 */
 	public function get_date() {
 		$_date = $this->get_github_data();
-		return ( !empty($_date->updated_at) ) ? date( 'Y-m-d', strtotime( $_date->updated_at ) ) : false;
+		return ( !empty( $_date->updated_at ) ) ? date( 'Y-m-d', strtotime( $_date->updated_at ) ) : false;
 	}
 
 
@@ -270,7 +272,7 @@ class WPGitHubUpdater {
 	 */
 	public function get_description() {
 		$_description = $this->get_github_data();
-		return ( !empty($_description->description) ) ? $_description->description : false;
+		return ( !empty( $_description->description ) ) ? $_description->description : false;
 	}
 
 
@@ -281,7 +283,7 @@ class WPGitHubUpdater {
 	 * @return object $data the data
 	 */
 	public function get_plugin_data() {
-		include_once( ABSPATH.'/wp-admin/includes/plugin.php' );
+		include_once ABSPATH.'/wp-admin/includes/plugin.php';
 		$data = get_plugin_data( WP_PLUGIN_DIR.'/'.$this->config['slug'] );
 		return $data;
 	}
@@ -291,7 +293,7 @@ class WPGitHubUpdater {
 	 * Hook into the plugin update check and connect to github
 	 *
 	 * @since 1.0
-	 * @param object $transient the plugin data transient
+	 * @param object  $transient the plugin data transient
 	 * @return object $transient updated plugin data transient
 	 */
 	public function api_check( $transient ) {
@@ -308,7 +310,7 @@ class WPGitHubUpdater {
 			$response = new stdClass;
 			$response->new_version = $this->config['new_version'];
 			$response->slug = $this->config['proper_folder_name'];
-			$response->url = add_query_arg( array('access_token' => $this->config['access_token']), $this->config['github_url'] );
+			$response->url = add_query_arg( array( 'access_token' => $this->config['access_token'] ), $this->config['github_url'] );
 			$response->package = $this->config['zip_url'];
 
 			// If response is false, don't alter the transient
@@ -324,9 +326,9 @@ class WPGitHubUpdater {
 	 * Get Plugin info
 	 *
 	 * @since 1.0
-	 * @param bool $false always false
-	 * @param string $action the API function being performed
-	 * @param object $args plugin arguments
+	 * @param bool    $false  always false
+	 * @param string  $action the API function being performed
+	 * @param object  $args   plugin arguments
 	 * @return object $response the plugin info
 	 */
 	public function get_plugin_info( $false, $action, $response ) {
@@ -356,9 +358,9 @@ class WPGitHubUpdater {
 	 * Move & activate the plugin, echo the update message
 	 *
 	 * @since 1.0
-	 * @param boolean $true always true
-	 * @param mixed $hook_extra not used
-	 * @param array $result the result of the move
+	 * @param boolean $true       always true
+	 * @param mixed   $hook_extra not used
+	 * @param array   $result     the result of the move
 	 * @return array $result the result of the move
 	 */
 	public function upgrader_post_install( $true, $hook_extra, $result ) {
@@ -372,8 +374,8 @@ class WPGitHubUpdater {
 		$activate = activate_plugin( WP_PLUGIN_DIR.'/'.$this->config['slug'] );
 
 		// Output the update message
-		$fail		= __('The plugin has been updated, but could not be reactivated. Please reactivate it manually.', 'github_plugin_updater');
-		$success	= __('Plugin reactivated successfully.', 'github_plugin_updater');
+		$fail  = __( 'The plugin has been updated, but could not be reactivated. Please reactivate it manually.', 'github_plugin_updater' );
+		$success = __( 'Plugin reactivated successfully.', 'github_plugin_updater' );
 		echo is_wp_error( $activate ) ? $fail : $success;
 		return $result;
 
