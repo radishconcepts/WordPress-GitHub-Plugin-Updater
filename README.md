@@ -44,6 +44,7 @@ Changelog
 
 ### 1.6 (in development)
 * Get version from plugin header instead of readme with backwards compatibility support for readme, added by [@ninnypants](https://github.com/ninnypants)
+* Better ways to handle GitHub API calls and the way the data is stored, thanks to [@coenjacobs](https://github.com/coenjacobs)
 * Follow WordPress code standards and remove trailing whitespace
 
 ### 1.5
