@@ -58,7 +58,7 @@ function github_plugin_updater_test_init() {
 			'access_token' => '',
 		);
 
-		new WPGitHubUpdater( $config );
+		new WP_GitHub_Updater( $config );
 
 	}
 

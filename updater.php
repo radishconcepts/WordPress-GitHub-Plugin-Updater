@@ -4,7 +4,7 @@
 if ( !defined( 'ABSPATH' ) )
 	die( '-1' );
 
-if ( ! class_exists( 'WPGitHubUpdater' ) ) :
+if ( ! class_exists( 'WP_GitHub_Updater' ) ) :
 
 	/**
 	 *
@@ -14,7 +14,7 @@ if ( ! class_exists( 'WPGitHubUpdater' ) ) :
 	 * @link http://jkudish.com
 	 * @package GithubUpdater
 	 * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
-	 * @copyright Copyright (c) 2011, Joachim Kudish
+	 * @copyright Copyright (c) 2011-2013, Joachim Kudish
 	 *
 	 * GNU General Public License, Free Software Foundation
 	 * <http://creativecommons.org/licenses/GPL/2.0/>
@@ -33,7 +33,7 @@ if ( ! class_exists( 'WPGitHubUpdater' ) ) :
 	 * along with this program; if not, write to the Free Software
 	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	 */
-	class WPGitHubUpdater {
+	class WP_GitHub_Updater {
 
 	/**
 	 * Temporary store the data fetched from GitHub, so it only gets loaded once per class instance
