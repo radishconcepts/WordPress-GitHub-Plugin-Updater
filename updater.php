@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) || class_exists( 'WPGitHubUpdater' ) || class_exists
 /**
  *
  *
- * @version 1.5
+ * @version 1.6
  * @author Joachim Kudish <info@jkudish.com>
  * @link http://jkudish.com
  * @package WP_GitHub_Updater
@@ -34,35 +34,55 @@ if ( ! defined( 'ABSPATH' ) || class_exists( 'WPGitHubUpdater' ) || class_exists
 class WP_GitHub_Updater {
 
 	/**
-	 * Temporary store the data fetched from GitHub, so it only gets loaded once per class instance
+	 * GitHub Updater version
+	 */
+	const VERSION = 1.6;
+
+	/**
+	 * @var $config the config for the updater
+	 * @access public
+	 */
+	var $config;
+
+	/**
+	 * @var $missing_config any config that is missing from the initialization of this instance
+	 * @access public
+	 */
+	var $missing_config;
+
+	/**
+	 * @var $github_data temporiraly store the data fetched from GitHub, allows us to only load the data once per class instance
+	 * @access private
 	 */
 	private $github_data;
+
 
 	/**
 	 * Class Constructor
 	 *
 	 * @since 1.0
-	 * @param array   $config configuration
+	 * @param array $config the configuration required for the updater to work
+	 * @see has_minimum_config()
 	 * @return void
 	 */
 	public function __construct( $config = array() ) {
 
-		global $wp_version;
-
 		$defaults = array(
 			'slug' => plugin_basename( __FILE__ ),
 			'proper_folder_name' => dirname( plugin_basename( __FILE__ ) ),
-			'api_url' => 'https://api.github.com/repos/jkudish/WordPress-GitHub-Plugin-Updater',
-			'raw_url' => 'https://raw.github.com/jkudish/WordPress-GitHub-Plugin-Updater/master',
-			'github_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater',
-			'zip_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/zipball/master',
 			'sslverify' => true,
-			'requires' => $wp_version,
-			'tested' => $wp_version,
 			'access_token' => '',
 		);
 
 		$this->config = wp_parse_args( $config, $defaults );
+
+		// if the minimum config isn't set, issue a warning and bail
+		if ( ! $this->has_minimum_config() ) {
+			$message = 'The GitHub Updater was initialized without the minimum required configuration, please check the config in your plugin. The following params are missing: ';
+			$message .= implode( ',', $this->missing_config );
+			_doing_it_wrong( __CLASS__, '' , self::VERSION );
+			return;
+		}
 
 		$this->set_defaults();
 
@@ -77,6 +97,28 @@ class WP_GitHub_Updater {
 
 		// set sslverify for zip download
 		add_filter( 'http_request_args', array( $this, 'http_request_sslverify' ), 10, 2 );
+	}
+
+	public function has_minimum_config() {
+
+		$this->missing_config = array();
+
+		$required_config_params = array(
+			'api_url',
+			'raw_url',
+			'github_url',
+			'zip_url',
+			'requires',
+			'tested',
+			'readme',
+		);
+
+		foreach ( $required_config_params as $required_param ) {
+			if ( ! empty( $this->config[$required_param] ) )
+				$this->missing_config[] = $required_param;
+		}
+
+		return ( empty( $this->missing_config ) );
 	}
 
 
@@ -99,6 +141,7 @@ class WP_GitHub_Updater {
 	 */
 	public function set_defaults() {
 		if ( !empty( $this->config['access_token'] ) ) {
+
 			// See Downloading a zipball (private repo) https://help.github.com/articles/downloading-files-from-the-command-line
 			extract( parse_url( $this->config['zip_url'] ) ); // $scheme, $host, $path
 
