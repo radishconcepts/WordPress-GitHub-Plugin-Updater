@@ -9,13 +9,13 @@ The code is still in it's infancy, but [I am currently using it](https://github.
 Usage instructions
 ===========
 
-* The class should be included somewhere in your plugin. You will need to require the file (example: `include_once('updater.php');`).
+* The class should be included somewhere in your plugin. You will need to require the file (example: `require_once( 'updater.php' );`).
 * You will need to initialize the class using something similar to this:
 
 	<pre>
-	if (is_admin()) { // note the use of is_admin() to double check that this is happening in the admin
+	if ( is_admin() ) { // note the use of is_admin() to double check that this is happening in the admin
 		$config = array(
-			'slug' => plugin_basename(__FILE__), // this is the slug of your plugin
+			'slug' => plugin_basename( __FILE__ ), // this is the slug of your plugin
 			'proper_folder_name' => 'plugin-name', // this is the name of the folder your plugin lives in
 			'api_url' => 'https://api.github.com/repos/username/repository-name', // the github API url of your github repo
 			'raw_url' => 'https://raw.github.com/username/repository-name/master', // the github raw url of your github repo
@@ -27,15 +27,13 @@ Usage instructions
 			'readme' => 'README.md', // which file to use as the readme for the version number
 			'access_token' => '', // Access private repositories by authorizing under Appearance > Github Updates when this example plugin is installed
 		);
-		new WPGitHubUpdater($config);
+		new WP_GitHub_Updater( $config );
 	}
 	</pre>
 
-* In your Github repository, you will need to include the following line (formatted exactly like this) anywhere in your Readme file:
+* The version will be read from the [File Header](http://codex.wordpress.org/Writing_a_Plugin#File_Headers) (Recommended). But you can also include the following line (formatted exactly like this) anywhere in your Readme file:
 
 	`~Current Version:1.4~`
-
-* You will need to update the version number anytime you update the plugin, this will ultimately let the plugin know that a new version is available.
 
 * **Note**: this class will unfortunately not work with a private repository, your repository needs to be publicly accessible. If anyone knows how to make this work for private repositories, please get in touch!
 
