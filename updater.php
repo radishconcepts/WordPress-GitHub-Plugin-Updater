@@ -114,7 +114,7 @@ class WP_GitHub_Updater {
 		);
 
 		foreach ( $required_config_params as $required_param ) {
-			if ( ! empty( $this->config[$required_param] ) )
+			if ( empty( $this->config[$required_param] ) )
 				$this->missing_config[] = $required_param;
 		}
 
