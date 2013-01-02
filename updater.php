@@ -234,37 +234,36 @@ class WP_GitHub_Updater {
 	public function get_new_version() {
 		$version = get_site_transient( $this->config['slug'].'_new_version' );
 
-		if ( $this->overrule_transients() || ( !isset( $version ) || !$version || '' == $version ) ) {
+		if ( $this->overrule_transients() || empty( $version ) ) {
+
+			$version = false;
 
 			$raw_response = $this->remote_get( trailingslashit( $this->config['raw_url'] ) . basename( $this->config['slug'] ) );
 
-			if ( is_wp_error( $raw_response ) )
-				$version = false;
+			if ( ! is_wp_error( $raw_response ) ) {
+				preg_match( '#^\s*Version\:\s*(.*)$#im', $raw_response['body'], $matches );
 
-			preg_match( '#^\s*Version\:\s*(.*)$#im', $raw_response['body'], $matches );
-
-			if ( empty( $matches[1] ) )
-				$version = false;
-			else
-				$version = $matches[1];
+				if ( empty( $matches[1] ) )
+					$version = $matches[1];
+			}
 
 			// back compat for older readme version handling
 			$raw_response = $this->remote_get( trailingslashit( $this->config['raw_url'] ) . $this->config['readme'] );
 
-			if ( is_wp_error( $raw_response ) )
-				return $version;
+			if ( ! is_wp_error( $raw_response ) ) {
+				preg_match( '#^\s*`*~Current Version\:\s*([^~]*)~#im', $raw_response['body'], $__version );
 
-			preg_match( '#^\s*`*~Current Version\:\s*([^~]*)~#im', $raw_response['body'], $__version );
+				if ( isset( $__version[1] ) ) {
+					$version_readme = $__version[1];
 
-			if ( isset( $__version[1] ) ) {
-				$version_readme = $__version[1];
-				if ( -1 == version_compare( $version, $version_readme ) )
-					$version = $version_readme;
+					if ( -1 == version_compare( $version, $version_readme ) )
+						$version = $version_readme;
+				}
 			}
 
 			// refresh every 6 hours
-			if ( false !== $version )
-				set_site_transient( $this->config['slug'].'_new_version', $version, 60*60*6 );
+			if ( ! empty( $version ) )
+				set_site_transient( $this->config['slug'] . '_new_version', $version, 60 * 60 * 6 );
 		}
 
 		return $version;
