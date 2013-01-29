@@ -48,11 +48,9 @@ function github_plugin_updater_test_init() {
 			'slug' => plugin_basename( __FILE__ ),
 			'proper_folder_name' => 'github-updater',
 			'github_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater',
-			'sslverify' => true,
 			'requires' => '3.0',
 			'tested' => '3.3',
 			'readme' => 'README.md',
-			'access_token' => '',
 		);
 
 		new WP_GitHub_Updater( $config );
