@@ -215,46 +215,54 @@ class WP_GitHub_Updater {
 	public function get_new_version() {
 		$version = get_site_transient( $this->config['slug'].'_new_version' );
 
-		if ( $this->overrule_transients() || ( !isset( $version ) || !$version || '' == $version ) ) {
+		if ( $this->overrule_transients() || empty( $version ) ) {
+			$version = null;
 
-			$query = trailingslashit( $this->config['raw_url'] ) . basename( $this->config['slug'] );
-			$query = add_query_arg( array( 'access_token' => $this->config['access_token'] ), $query );
+			$raw_response = $this->remote_get( trailingslashit( $this->config['raw_url'] ) . basename( $this->config['slug'] ) );
 
-			$raw_response = wp_remote_get( $query, array( 'sslverify' => $this->config['sslverify'] ) );
+			if ( ! is_wp_error( $raw_response ) ) {
+				preg_match( '#^\s*Version\:\s*(.*)$#im', $raw_response['body'], $matches );
 
-			if ( is_wp_error( $raw_response ) )
-				$version = false;
-
-			preg_match( '#^\s*Version\:\s*(.*)$#im', $raw_response['body'], $matches );
-
-			if ( empty( $matches[1] ) )
-				$version = false;
-			else
-				$version = $matches[1];
+				if ( ! empty( $matches[1] ) )
+					$version = $matches[1];
+			}
 
 			// back compat for older readme version handling
-			$query = trailingslashit( $this->config['raw_url'] ) . $this->config['readme'];
-			$query = add_query_arg( array( 'access_token' => $this->config['access_token'] ), $query );
+			$raw_response = $this->remote_get( trailingslashit( $this->config['raw_url'] ) . $this->config['readme'] );
 
-			$raw_response = wp_remote_get( $query, array( 'sslverify' => $this->config['sslverify'] ) );
+			if ( ! is_wp_error( $raw_response ) ) {
+				preg_match( '#^\s*`*~Current Version\:\s*([^~]*)~#im', $raw_response['body'], $__version );
 
-			if ( is_wp_error( $raw_response ) )
-				return $version;
-
-			preg_match( '#^\s*`*~Current Version\:\s*([^~]*)~#im', $raw_response['body'], $__version );
-
-			if ( isset( $__version[1] ) ) {
-				$version_readme = $__version[1];
-				if ( -1 == version_compare( $version, $version_readme ) )
-					$version = $version_readme;
+				if ( isset( $__version[1] ) && -1 == version_compare( $version, $__version[1] ) )
+					$version = $__version[1];
 			}
 
 			// refresh every 6 hours
-			if ( false !== $version )
+			if ( ! empty( $version ) )
 				set_site_transient( $this->config['slug'].'_new_version', $version, 60*60*6 );
 		}
 
 		return $version;
+	}
+
+
+	/**
+	 * Interact with GitHub
+	 *
+	 * @param string $query
+	 *
+	 * @since 1.6
+	 * @return mixed
+	 */
+	public function remote_get( $query ) {
+		if ( ! empty( $this->config['access_token'] ) )
+			$query = add_query_arg( array( 'access_token' => $this->config['access_token'] ), $query );
+
+		$raw_response = wp_remote_get( $query, array(
+			'sslverify' => $this->config['sslverify']
+		) );
+
+		return $raw_response;
 	}
 
 
@@ -271,10 +279,7 @@ class WP_GitHub_Updater {
 			$github_data = get_site_transient( $this->config['slug'].'_github_data' );
 
 			if ( $this->overrule_transients() || ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) ) {
-				$query = $this->config['api_url'];
-				$query = add_query_arg( array( 'access_token' => $this->config['access_token'] ), $query );
-
-				$github_data = wp_remote_get( $query, array( 'sslverify' => $this->config['sslverify'] ) );
+				$github_data = $this->remote_get( $this->config['api_url'] );
 
 				if ( is_wp_error( $github_data ) )
 					return false;
