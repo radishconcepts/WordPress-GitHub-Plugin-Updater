@@ -39,7 +39,7 @@ Usage instructions
 
 * From v1.6, the updater can pick up the version from the plugin header as well.
 
-* <strike>**Note**: this class will unfortunately not work with a private repository, your repository needs to be publicly accessible. If anyone knows how to make this work for private repositories, please get in touch!</strike> Support for private repository was added from v1.5
+* Support for private repository was added in v1.5
 
 Changelog
 ===========
