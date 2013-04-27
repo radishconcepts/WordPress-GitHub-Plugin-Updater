@@ -27,7 +27,7 @@ Usage instructions
 			'readme' => 'README.md', // which file to use as the readme for the version number
 			'access_token' => '', // Access private repositories by authorizing under Appearance > Github Updates when this example plugin is installed
 		);
-		new WPGitHubUpdater($config);
+		new WP_GitHub_Updater($config);
 	}
 	</pre>
 
@@ -37,7 +37,9 @@ Usage instructions
 
 * You will need to update the version number anytime you update the plugin, this will ultimately let the plugin know that a new version is available.
 
-* **Note**: this class will unfortunately not work with a private repository, your repository needs to be publicly accessible. If anyone knows how to make this work for private repositories, please get in touch!
+* From v1.6, the updater can pick up the version from the plugin header as well.
+
+* <strike>**Note**: this class will unfortunately not work with a private repository, your repository needs to be publicly accessible. If anyone knows how to make this work for private repositories, please get in touch!</strike> Support for private repository was added from v1.5
 
 Changelog
 ===========
