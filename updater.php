@@ -225,10 +225,10 @@ class WP_GitHub_Updater {
 			if ( is_wp_error( $raw_response ) )
 				$version = false;
 
-			if (is_array($raw_response))
-				preg_match( '#^\s*Version\:\s*(.*)$#im', $raw_response['body'], $matches );
-			else
-				preg_match( '#^\s*Version\:\s*(.*)$#im', $raw_response, $matches );
+			if (is_array($raw_response)) {
+				if (!empty($raw_response['body']))
+					preg_match( '#^\s*Version\:\s*(.*)$#im', $raw_response['body'], $matches );
+			}
 
 			if ( empty( $matches[1] ) )
 				$version = false;
