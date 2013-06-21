@@ -50,7 +50,7 @@ function github_plugin_updater_test_init() {
 			'api_url' => 'https://api.github.com/repos/jkudish/WordPress-GitHub-Plugin-Updater',
 			'raw_url' => 'https://raw.github.com/jkudish/WordPress-GitHub-Plugin-Updater/master',
 			'github_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater',
-			'zip_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/zipball/master',
+			'zip_url' => 'https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/archive/master.zip',
 			'sslverify' => true,
 			'requires' => '3.0',
 			'tested' => '3.3',
