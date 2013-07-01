@@ -125,11 +125,10 @@ class WP_GitHub_Updater {
 	/**
 	 * Check wether or not the transients need to be overruled and API needs to be called for every single page load
 	 *
-	 * @access private
 	 * @return bool overrule or not
 	 */
-	private function overrule_transients() {
-		return ( defined( 'WP_DEBUG' ) && WP_DEBUG ) || ( defined( 'WP_GITHUB_FORCE_UPDATE' ) || WP_GITHUB_FORCE_UPDATE );
+	public function overrule_transients() {
+		return ( defined( 'WP_GITHUB_FORCE_UPDATE' ) && WP_GITHUB_FORCE_UPDATE );
 	}
 
 
