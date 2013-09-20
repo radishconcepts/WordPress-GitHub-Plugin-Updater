@@ -48,6 +48,9 @@ Changelog
 * Get version from plugin header instead of readme with backwards compatibility support for readme, added by [@ninnypants](https://github.com/ninnypants)
 * Better ways to handle GitHub API calls and the way the data is stored, thanks to [@coenjacobs](https://github.com/coenjacobs)
 * Follow WordPress code standards and remove trailing whitespace
+* Fix a PHP notice in the Plugins admin screen, props [@ninnypants](https://github.com/ninnypants)
+* Use a central function for building the query used to communicate with the Github API, props [@davidmosterd](https://github.com/davidmosterd)
+
 
 ### 1.5
 * Support for private repositories added by [@pdclark](http://profiles.wordpress.org/pdclark)
