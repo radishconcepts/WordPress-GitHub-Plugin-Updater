@@ -38,6 +38,10 @@ class WP_GitHub_Updater {
 	 */
 	const VERSION = 1.6;
 
+	const TRANSIENT_SUFFIX_GITHUB = '_github_data';
+
+	const TRANSIENT_SUFFIX_VERSION = '_new_version';
+
 	/**
 	 * @var $config the config for the updater
 	 * @access public
@@ -68,7 +72,8 @@ class WP_GitHub_Updater {
 	public function __construct( $config = array() ) {
 
 		$defaults = array(
-			'slug' => plugin_basename( __FILE__ ),
+			'slug' => dirname( plugin_basename( __FILE__ ) ),
+			'plugin_file' => plugin_basename( __FILE__ ),
 			'proper_folder_name' => dirname( plugin_basename( __FILE__ ) ),
 			'sslverify' => true,
 			'access_token' => '',
@@ -212,11 +217,12 @@ class WP_GitHub_Updater {
 	 * @return int $version the version number
 	 */
 	public function get_new_version() {
-		$version = get_site_transient( $this->config['slug'].'_new_version' );
+		$transient_id = $this->make_transient_id( $this->config['slug'], self::TRANSIENT_SUFFIX_VERSION );
+		$version = get_site_transient( $transient_id );
 
 		if ( $this->overrule_transients() || ( !isset( $version ) || !$version || '' == $version ) ) {
 
-			$raw_response = $this->remote_get( trailingslashit( $this->config['raw_url'] ) . basename( $this->config['slug'] ) );
+			$raw_response = $this->remote_get( trailingslashit( $this->config['raw_url'] ) . basename( $this->config['plugin_file'] ) );
 
 			if ( is_wp_error( $raw_response ) )
 				$version = false;
@@ -231,23 +237,25 @@ class WP_GitHub_Updater {
 			else
 				$version = $matches[1];
 
-			// back compat for older readme version handling
-			$raw_response = $this->remote_get( trailingslashit( $this->config['raw_url'] ) . $this->config['readme'] );
+			if ( false === $version ) {
+				// back compat for older readme version handling
+				$raw_response = $this->remote_get( trailingslashit( $this->config['raw_url'] ) . $this->config['readme'] );
 
-			if ( is_wp_error( $raw_response ) )
-				return $version;
+				if ( is_wp_error( $raw_response ) )
+					return $version;
 
-			preg_match( '#^\s*`*~Current Version\:\s*([^~]*)~#im', $raw_response['body'], $__version );
+				preg_match( '#^\s*`*~Current Version\:\s*([^~]*)~#im', $raw_response['body'], $__version );
 
-			if ( isset( $__version[1] ) ) {
-				$version_readme = $__version[1];
-				if ( -1 == version_compare( $version, $version_readme ) )
-					$version = $version_readme;
+				if ( isset( $__version[1] ) ) {
+					$version_readme = $__version[1];
+					if ( -1 == version_compare( $version, $version_readme ) )
+						$version = $version_readme;
+				}
 			}
 
 			// refresh every 6 hours
 			if ( false !== $version )
-				set_site_transient( $this->config['slug'].'_new_version', $version, 60*60*6 );
+				set_site_transient( $transient_id, $version, 60*60*6 );
 		}
 
 		return $version;
@@ -281,10 +289,12 @@ class WP_GitHub_Updater {
 	 * @return array $github_data the data
 	 */
 	public function get_github_data() {
+		$transient_id = $this->make_transient_id( $this->config['slug'], self::TRANSIENT_SUFFIX_GITHUB );
+
 		if ( isset( $this->github_data ) && ! empty( $this->github_data ) ) {
 			$github_data = $this->github_data;
 		} else {
-			$github_data = get_site_transient( $this->config['slug'].'_github_data' );
+			$github_data = get_site_transient( $transient_id );
 
 			if ( $this->overrule_transients() || ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) ) {
 				$github_data = $this->remote_get( $this->config['api_url'] );
@@ -295,7 +305,7 @@ class WP_GitHub_Updater {
 				$github_data = json_decode( $github_data['body'] );
 
 				// refresh every 6 hours
-				set_site_transient( $this->config['slug'].'_github_data', $github_data, 60*60*6 );
+				set_site_transient( $transient_id, $github_data, 60*60*6 );
 			}
 
 			// Store the data in this class instance for future calls
@@ -433,5 +443,31 @@ class WP_GitHub_Updater {
 		echo is_wp_error( $activate ) ? $fail : $success;
 		return $result;
 
+	}
+
+
+	/**
+	 * Validate/Modify the ID being passed to get/set_site_transient
+	 *
+	 * @since 1.6
+	 * @param string   $slug    the user's specified slug
+	 * @param string   $suffix  our unique identifier
+	 * @return string  $result  the scrubbed id
+	 */
+	public function make_transient_id( $slug, $suffix ) {
+		/**
+		 * wp_options (table) : option_name (field) only accepts 64 characters
+		 * set_site_transient($id) prepends no more than 24 characters to the passed $id
+		 * ref: http://codex.wordpress.org/Function_Reference/set_site_transient
+		 *
+		 * We don't want our id to be more than 40 characters.
+		 */
+		$max_length = 40;
+
+		if ( strlen( $slug . $suffix ) > $max_length ) {
+			$slug = substr( $slug, 0, ( $max_length - strlen( $suffix ) ) );
+		}
+
+		return $slug . $suffix;
 	}
 }

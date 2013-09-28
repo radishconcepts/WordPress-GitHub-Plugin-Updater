@@ -45,7 +45,7 @@ function github_plugin_updater_test_init() {
 	if ( is_admin() ) { // note the use of is_admin() to double check that this is happening in the admin
 
 		$config = array(
-			'slug' => plugin_basename( __FILE__ ),
+			'slug' => dirname( plugin_basename( __FILE__ ) ),
 			'proper_folder_name' => 'github-updater',
 			'api_url' => 'https://api.github.com/repos/jkudish/WordPress-GitHub-Plugin-Updater',
 			'raw_url' => 'https://raw.github.com/jkudish/WordPress-GitHub-Plugin-Updater/master',
@@ -54,6 +54,7 @@ function github_plugin_updater_test_init() {
 			'sslverify' => true,
 			'requires' => '3.0',
 			'tested' => '3.3',
+			'plugin_file' => plugin_basename( __FILE__ ),
 			'readme' => 'README.md',
 			'access_token' => '',
 		);

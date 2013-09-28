@@ -24,20 +24,25 @@ Usage instructions
 			'sslverify' => true // wether WP should check the validity of the SSL cert when getting an update, see https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2 and https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4 for details
 			'requires' => '3.0', // which version of WordPress does your plugin require?
 			'tested' => '3.3', // which version of WordPress is your plugin tested up to?
-			'readme' => 'README.md', // which file to use as the readme for the version number
+			'plugin_file' => plugin_basename(__FILE__), // main plugin file to use for the 'Version: 1.4' version number
+			'readme' => 'README.md', // which file to use as the readme for the '~Current Version:1.4~' version number
 			'access_token' => '', // Access private repositories by authorizing under Appearance > Github Updates when this example plugin is installed
 		);
 		new WP_GitHub_Updater($config);
 	}
 	</pre>
 
-* In your Github repository, you will need to include the following line (formatted exactly like this) anywhere in your Readme file:
+* The class will check for the new version number in two places in your Github repository.
+
+	1. The file specified in `plugin_file` should be the PHP file that contains the standard Wordpress Plugin header. The class will check for:
+
+	`Version: 1.4`
+
+	2. The file specified in `readme` will be parsed for the following line (which must appear in this exact form):
 
 	`~Current Version:1.4~`
 
 * You will need to update the version number anytime you update the plugin, this will ultimately let the plugin know that a new version is available.
-
-* From v1.6, the updater can pick up the version from the plugin header as well.
 
 * Support for private repository was added in v1.5
 
