@@ -206,7 +206,7 @@ class WP_GitHub_Updater {
 
 
 	/**
-	 * Get New Version from github
+	 * Get New Version from GitHub
 	 *
 	 * @since 1.0
 	 * @return int $version the version number
@@ -344,7 +344,7 @@ class WP_GitHub_Updater {
 
 
 	/**
-	 * Hook into the plugin update check and connect to github
+	 * Hook into the plugin update check and connect to GitHub
 	 *
 	 * @since 1.0
 	 * @param object  $transient the plugin data transient
