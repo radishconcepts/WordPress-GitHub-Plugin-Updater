@@ -1,4 +1,5 @@
 WordPress GitHub Plugin Updater
+===========
 
 This class is meant to be used with your GitHub hosted WordPress plugins. The purpose of the class is to allow your WordPress plugin to be updated whenever you push out a new version of your plugin, similar to the experience users know and love with the WordPress.org plugin repository.
 
