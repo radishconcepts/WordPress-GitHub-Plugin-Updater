@@ -1,8 +1,8 @@
-WordPress Github Plugin Updater
+WordPress GitHub Plugin Updater
 
-This class is meant to be used with your Github hosted WordPress plugins. The purpose of the class is to allow your WordPress plugin to be updated whenever you push out a new version of your plugin, similar to the experience users know and love with the WordPress.org plugin repository.
+This class is meant to be used with your GitHub hosted WordPress plugins. The purpose of the class is to allow your WordPress plugin to be updated whenever you push out a new version of your plugin, similar to the experience users know and love with the WordPress.org plugin repository.
 
-Not all plugins can or should be hosted on the WordPress.org plugin repository, or you may chose to host it on github only.
+Not all plugins can or should be hosted on the WordPress.org plugin repository, or you may chose to host it on GitHub only.
 
 The code is still in its infancy, but [I am currently using it](https://github.com/jkudish/JigoShop-Software-Add-on) on a production plugin and production website, without any glitches. That being said, please consider this as a beta release. The project started off as a private client request, but is now public for anyone to collaborate on. I am open to any suggestions :)
 
@@ -17,21 +17,21 @@ Usage instructions
 		$config = array(
 			'slug' => plugin_basename(__FILE__), // this is the slug of your plugin
 			'proper_folder_name' => 'plugin-name', // this is the name of the folder your plugin lives in
-			'api_url' => 'https://api.github.com/repos/username/repository-name', // the github API url of your github repo
-			'raw_url' => 'https://raw.github.com/username/repository-name/master', // the github raw url of your github repo
-			'github_url' => 'https://github.com/username/repository-name', // the github url of your github repo
-			'zip_url' => 'https://github.com/username/repository-name/zipball/master', // the zip url of the github repo
+			'api_url' => 'https://api.github.com/repos/username/repository-name', // the GitHub API url of your GitHub repo
+			'raw_url' => 'https://raw.github.com/username/repository-name/master', // the GitHub raw url of your GitHub repo
+			'github_url' => 'https://github.com/username/repository-name', // the GitHub url of your GitHub repo
+			'zip_url' => 'https://github.com/username/repository-name/zipball/master', // the zip url of the GitHub repo
 			'sslverify' => true // wether WP should check the validity of the SSL cert when getting an update, see https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2 and https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4 for details
 			'requires' => '3.0', // which version of WordPress does your plugin require?
 			'tested' => '3.3', // which version of WordPress is your plugin tested up to?
 			'readme' => 'README.md', // which file to use as the readme for the version number
-			'access_token' => '', // Access private repositories by authorizing under Appearance > Github Updates when this example plugin is installed
+			'access_token' => '', // Access private repositories by authorizing under Appearance > GitHub Updates when this example plugin is installed
 		);
 		new WP_GitHub_Updater($config);
 	}
 	</pre>
 
-* In your Github repository, you will need to include the following line (formatted exactly like this) anywhere in your Readme file:
+* In your GitHub repository, you will need to include the following line (formatted exactly like this) anywhere in your Readme file:
 
 	`~Current Version:1.4~`
 
@@ -49,7 +49,7 @@ Changelog
 * Better ways to handle GitHub API calls and the way the data is stored, thanks to [@coenjacobs](https://github.com/coenjacobs)
 * Follow WordPress code standards and remove trailing whitespace
 * Fix a PHP notice in the Plugins admin screen, props [@ninnypants](https://github.com/ninnypants)
-* Use a central function for building the query used to communicate with the Github API, props [@davidmosterd](https://github.com/davidmosterd)
+* Use a central function for building the query used to communicate with the GitHub API, props [@davidmosterd](https://github.com/davidmosterd)
 
 
 ### 1.5
