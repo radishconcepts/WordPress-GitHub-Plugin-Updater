@@ -232,17 +232,20 @@ class WP_GitHub_Updater {
 				$version = $matches[1];
 
 			// back compat for older readme version handling
-			$raw_response = $this->remote_get( trailingslashit( $this->config['raw_url'] ) . $this->config['readme'] );
+			// only done when there is no version found in file name
+			if ( false === $version ) {
+				$raw_response = $this->remote_get( trailingslashit( $this->config['raw_url'] ) . $this->config['readme'] );
 
-			if ( is_wp_error( $raw_response ) )
-				return $version;
+				if ( is_wp_error( $raw_response ) )
+					return $version;
 
-			preg_match( '#^\s*`*~Current Version\:\s*([^~]*)~#im', $raw_response['body'], $__version );
+				preg_match( '#^\s*`*~Current Version\:\s*([^~]*)~#im', $raw_response['body'], $__version );
 
-			if ( isset( $__version[1] ) ) {
-				$version_readme = $__version[1];
-				if ( -1 == version_compare( $version, $version_readme ) )
-					$version = $version_readme;
+				if ( isset( $__version[1] ) ) {
+					$version_readme = $__version[1];
+					if ( -1 == version_compare( $version, $version_readme ) )
+						$version = $version_readme;
+				}
 			}
 
 			// refresh every 6 hours
