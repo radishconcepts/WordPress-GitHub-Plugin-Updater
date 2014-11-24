@@ -338,8 +338,21 @@ class WP_GitHub_Updater {
 	 */
 	public function get_plugin_data() {
 		include_once ABSPATH.'/wp-admin/includes/plugin.php';
-		$data = get_plugin_data( WP_PLUGIN_DIR.'/'.$this->config['slug'] );
+		$data = get_plugin_data($this->get_plugin_path());
 		return $data;
+	}
+
+
+	/**
+	 * @since 1.6
+	 * @return string containing path to this plugin
+	 */
+	public function get_plugin_path() {
+		if ( isset($this->config['plugin_path'] ) ) {
+			return $this->config['plugin_path'];
+		}
+
+		return WP_PLUGIN_DIR.'/'.$this->config['slug'];
 	}
 
 
