@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: WP Github Plugin Updater Test
+Plugin Name: WP GitHub Plugin Updater Test
 Plugin URI: https://github.com/jkudish/WordPress-GitHub-Plugin-Updater
-Description: Semi-automated test for the Github Plugin Updater
+Description: Semi-automated test for the GitHub Plugin Updater
 Version: 0.1
 Author: Joachim Kudish
 Author URI: http://jkudish.com/
@@ -116,7 +116,7 @@ class WPGitHubUpdaterSetup {
 	 */
 	function add_page() {
 		if ( current_user_can ( 'manage_options' ) ) {
-			$this->options_page_hookname = add_plugins_page ( __( 'Github Updates', 'github_plugin_updater' ), __( 'Github Updates', 'github_plugin_updater' ), 'manage_options', 'github-updater', array( $this, 'admin_page' ) );
+			$this->options_page_hookname = add_plugins_page ( __( 'GitHub Updates', 'github_plugin_updater' ), __( 'GitHub Updates', 'github_plugin_updater' ), 'manage_options', 'github-updater', array( $this, 'admin_page' ) );
 			add_filter( "network_admin_plugin_action_links_{$this->plugin_basename}", array( $this, 'filter_plugin_actions' ) );
 			add_filter( "plugin_action_links_{$this->plugin_basename}", array( $this, 'filter_plugin_actions' ) );
 		}
@@ -157,7 +157,7 @@ class WPGitHubUpdaterSetup {
 			)
 		);
 		add_settings_field(
-			'gh_authorize', '<p class="submit"><input class="button-primary" type="submit" value="'.__( 'Authorize with Github', 'github_plugin_updater' ).'" /></p>', null, 'github-updater', 'ghupdate_private', null
+			'gh_authorize', '<p class="submit"><input class="button-primary" type="submit" value="'.__( 'Authorize with GitHub', 'github_plugin_updater' ).'" /></p>', null, 'github-updater', 'ghupdate_private', null
 		);
 
 	}
@@ -169,7 +169,7 @@ class WPGitHubUpdaterSetup {
 		<ol>
 			<li><a href="https://github.com/settings/applications/new" target="_blank">Create an application</a> with the <strong>Main URL</strong> and <strong>Callback URL</strong> both set to <code><?php echo bloginfo( 'url' ) ?></code></li>
 			<li>Copy the <strong>Client ID</strong> and <strong>Client Secret</strong> from your <a href="https://github.com/settings/applications" target="_blank">application details</a> into the fields below.</li>
-			<li><a href="javascript:document.forms['ghupdate'].submit();">Authorize with Github</a>.</li>
+			<li><a href="javascript:document.forms['ghupdate'].submit();">Authorize with GitHub</a>.</li>
 		</ol>
 		<?php
 	}
@@ -191,7 +191,7 @@ class WPGitHubUpdaterSetup {
 
 		if ( empty( $value ) ) {
 ?>
-			<p>Input Client ID and Client Secret, then <a href="javascript:document.forms['ghupdate'].submit();">Authorize with Github</a>.</p>
+			<p>Input Client ID and Client Secret, then <a href="javascript:document.forms['ghupdate'].submit();">Authorize with GitHub</a>.</p>
 			<input value="<?php esc_attr_e( $value )?>" name="<?php esc_attr_e( $id ) ?>" id="<?php esc_attr_e( $id ) ?>" type="hidden" />
 			<?php
 		}else {
@@ -252,7 +252,7 @@ class WPGitHubUpdaterSetup {
 
 			<div class="head-wrap">
 				<?php screen_icon( 'plugins' ); ?>
-				<h2><?php _e( 'Setup Github Updates' , 'github_plugin_updater' ); ?></h2>
+				<h2><?php _e( 'Setup GitHub Updates' , 'github_plugin_updater' ); ?></h2>
 			</div>
 
 			<div class="postbox-container primary">
@@ -277,7 +277,7 @@ class WPGitHubUpdaterSetup {
 
 		$redirect_uri = urlencode( admin_url( 'admin-ajax.php?action=set_github_oauth_key' ) );
 
-		// Send user to Github for account authorization
+		// Send user to GitHub for account authorization
 
 		$query = 'https://github.com/login/oauth/authorize';
 		$query_args = array(
