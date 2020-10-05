@@ -6,8 +6,8 @@
   "license": "GPL-2.0-or-later",
   "homepage": "https://github.com/radishconcepts/WordPress-GitHub-Plugin-Updater",
   "readme": "https://github.com/radishconcepts/WordPress-GitHub-Plugin-Updater/blob/master/README.md",
-  "support": [
+  "support": {
     "issues": "https://github.com/radishconcepts/WordPress-GitHub-Plugin-Updater/issues"
-  ],
+  },
   "prefer-stable": true
 }
