@@ -362,6 +362,7 @@ class WP_GitHub_Updater {
 
 		// check the version and decide if it's new
 		$update = version_compare( $this->config['new_version'], $this->config['version'] );
+		$update = apply_filters( 'wp_github_update_check', $update, $this->config['new_version'], $this->config['version'] );
 
 		if ( 1 === $update ) {
 			$response = new stdClass;
